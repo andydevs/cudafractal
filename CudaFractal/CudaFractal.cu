@@ -1,3 +1,4 @@
+#include "lodepng.h"
 #include "cuda_runtime.h"
 #include <stdlib.h>
 #include <stdio.h>
@@ -32,27 +33,6 @@ void pixels(unsigned img_w, unsigned img_h, unsigned img_c, unsigned char* img) 
 }
 
 /**
- * Prints the image array to the console
- *
- * @param img_w the width of the image
- * @param img_h the height of the image
- * @param img_c the number of color channels of the image
- * @param img   the image buffer
- */
-void printArray(unsigned img_w, unsigned img_h, unsigned img_c, unsigned char* img) {
-	for (unsigned y = 0; y < img_h; y++) {
-		for (unsigned x = 0; x < img_w; x++) {
-			for (unsigned z = 0; z < img_c; z++) {
-				printf("%02x", img[(y*img_w + x)*img_c + z]);
-			}
-			printf(" ");
-		}
-		printf("\n");
-	}
-	printf("\n");
-}
-
-/**
  * The main procedure
  *
  * @param argc the number of command line args
@@ -62,38 +42,35 @@ void printArray(unsigned img_w, unsigned img_h, unsigned img_c, unsigned char* i
  */
 int main(int argc, const char* argv[]) {
 	// Image meta
-	unsigned img_w = 16;
-	unsigned img_h = 16;
+	unsigned img_w = 1920;
+	unsigned img_h = 1080;
 	unsigned img_c = 4;
 	unsigned img_l = img_h*img_w*img_c;
 	unsigned char* img;
 
 	// Process meta
-	int block_w = 8;
-	int block_h = 8;
-	dim3 blockSize(block_w, block_h);
-	dim3 gridSize(img_w/block_w, img_h/block_h);
+	int block_n = 8;
+	int grid_n = (img_w > img_h ? img_w : img_h) / block_n;
+	dim3 blockSize(block_n, block_n);
+	dim3 gridSize(grid_n, grid_n);
 
 	// Cuda image buffer
 	cudaMallocManaged(&img, sizeof(unsigned char)*img_l);
 
-	// Print initial
-	printf("Initial:\n");
-	printArray(img_w, img_h, img_c, img);
-
 	// Call Cuda Routine
+	printf("Running CUDA routine...");
 	pixels<<<gridSize, blockSize>>>(img_w, img_h, img_c, img);
 	cudaDeviceSynchronize();
+	printf("Done!\n");
 
-	// Print final
-	printf("Final:\n");
-	printArray(img_w, img_h, img_c, img);
+	// Save to png file
+	printf("Saving png...");
+	lodepng_encode32_file(
+		"C:\\Users\\akans\\Desktop\\fractal.png", 
+		(const unsigned char*)img, img_w, img_h);
+	printf("Done!\n");
 	
-	// Free resources
+	// Free resources and exit
 	cudaFree(img);
-
-	// Q to quit
-	printf("\"q\" to quit...");
-	getchar();
 	return 0;
 }
