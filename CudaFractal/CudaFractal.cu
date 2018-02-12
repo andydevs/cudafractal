@@ -19,33 +19,42 @@
  * @param img   the image buffer
  */
 __global__
-void pixels(unsigned img_w, unsigned img_h, unsigned char* img) {
-	// Get x and y of image
-	// Don't run pixels beyond size on img
+void juliaset(unsigned img_w, unsigned img_h, unsigned char* img) {
+	// Get x and y of image (don't run pixels beyond size on img)
 	int y = blockIdx.x * blockDim.x + threadIdx.x;
 	int x = blockIdx.y * blockDim.y + threadIdx.y;
 	if (x >= img_w || y >= img_h) return;
 
 	// Get real and imaginary components of constant
-	// float creal = -0.4;
-	// float cimag = 0.6;
+	float cr = -0.4;
+	float ci = 0.6;
 	
-	// Get real and imaginary components of starting value
-	// float zreal = 2.0 * ((float)x) / img_w;
-	// float zimag = 2.0 * ((float)x) / img_h;
+	// Get real and imaginary components of starting complex
+	float zr = -2.0 * x / img_w + 1.0;
+	float zi =  2.0 * y / img_h - 1.0;
 
-	// printf("Pixel %i,%i -> %f + %fj\n", x, y, zreal, zimag);
+	/**
+	 * Since the complex values are being calculated manually (for now),
+	 * a copy of the last real value must be kept in order to properly
+	 * calculate both the next imaginary value. Since the imaginary value
+	 * is calculated after the next real is calculated, using the same
+	 * buffer would mean using the new calculated real as part of the 
+	 * calculation for the new imaginary value, which would produce 
+	 * the wrong imaginary value for the iteration.
+	 */
+	float lr;
 
 	// Juliaset Algorithm
-	int iters = 60;
-	//  for (iters = 0; iters < 256; iters++) {
-		// Break if we exceed the modulus
-	// 	if (zreal*zreal + zimag*zimag >= 4) break;
+	int iters;
+	for (iters = 0; iters < 255; iters++) {
+		// Break if abs(z)**2 >= 4
+		if (zr*zr + zi*zi >= 4) break;
 
 		// Run iteration of z: z = z^2 + c
-	// 	zreal = zreal*zreal - zimag*zimag + creal;
-	// 	zimag = 2*zreal*zimag + cimag;
-	// }
+		lr = zr;
+		zr = lr*lr - zi*zi + cr;
+	 	zi = 2*lr*zi + ci;
+	}
 
 	// Append colors to image buffer
 	img[(y*img_w + x)*IMAGE_NUM_CHANNELS + IMAGE_RED_CHANNEL]   = iters; // Red
@@ -80,7 +89,7 @@ int main(int argc, const char* argv[]) {
 
 	// Call Cuda Routine
 	printf("Running CUDA routine...");
-	pixels<<<gridSize, blockSize>>>(img_w, img_h, img);
+	juliaset<<<gridSize, blockSize>>>(img_w, img_h, img);
 	cudaDeviceSynchronize();
 	printf("Done!\n");
 
