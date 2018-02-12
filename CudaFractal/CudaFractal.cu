@@ -1,7 +1,6 @@
 #include "lodepng.h"
 #include "cuda_runtime.h"
-#include <stdlib.h>
-#include <stdio.h>
+#include <iostream>
 
 // PNG Image format
 #define IMAGE_NUM_CHANNELS 4
@@ -21,19 +20,22 @@
  * @param img   the image buffer
  */
 __global__
-void juliaset(unsigned img_w, unsigned img_h, unsigned char* img) {
+void juliaset(unsigned w, unsigned h, unsigned char* img) {
 	// Get x and y of image (don't run pixels beyond size on img)
 	int y = blockIdx.x * blockDim.x + threadIdx.x;
 	int x = blockIdx.y * blockDim.y + threadIdx.y;
-	if (x >= img_w || y >= img_h) return;
+	if (x >= w || y >= h) return;
 
 	// Get real and imaginary components of constant
 	float cr = -0.4;
 	float ci = 0.6;
+
+	// Get aspect ratio of image
+	float ar = (float)w / h;
 	
 	// Get real and imaginary components of starting complex
-	float zr = -2.0 * x / img_w + 1.0;
-	float zi =  2.0 * y / img_h - 1.0;
+	float zr = -2.0 * ar * x / w + ar;
+	float zi =  2.0 * y / h - 1.0;
 
 	/**
 	 * Since the complex values are being calculated manually (for now),
@@ -59,10 +61,10 @@ void juliaset(unsigned img_w, unsigned img_h, unsigned char* img) {
 	}
 
 	// Append colors to image buffer
-	img[(y*img_w + x)*IMAGE_NUM_CHANNELS + IMAGE_RED_CHANNEL]   = iters; // Red
-	img[(y*img_w + x)*IMAGE_NUM_CHANNELS + IMAGE_GREEN_CHANNEL] = iters; // Green
-	img[(y*img_w + x)*IMAGE_NUM_CHANNELS + IMAGE_BLUE_CHANNEL]  = iters; // Blue
-	img[(y*img_w + x)*IMAGE_NUM_CHANNELS + IMAGE_ALPHA_CHANNEL] = 0xff;  // Alpha
+	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_RED_CHANNEL]   = iters; // Red
+	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_GREEN_CHANNEL] = iters; // Green
+	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_BLUE_CHANNEL]  = iters; // Blue
+	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_ALPHA_CHANNEL] = 0xff;  // Alpha
 }
 
 /**
@@ -74,9 +76,10 @@ void juliaset(unsigned img_w, unsigned img_h, unsigned char* img) {
  * @return status code
  */
 int main(int argc, const char* argv[]) {
-	// Image meta
+	// Soon-to-be user-inputted data
 	unsigned width = 1920;
 	unsigned height = 1080;
+	const char* filename = "C:\\Users\\akans\\Desktop\\fractal.png";
 
 	// Image buffer info
 	unsigned char* image;
@@ -107,19 +110,17 @@ int main(int argc, const char* argv[]) {
 	// Call Cuda Routine on the given grid space of blocks
 	// Each block being a block space of threads.
 	// Each thread computes a separate pixel in the JuliaSet
-	printf("Running CUDA routine...");
-	juliaset<<<gridSpace, blockSpace>>>(width, height, img);
-	cudaDeviceSynchronize();
-	printf("Done!\n");
+	std::cout << "Running CUDA routine...";
+	juliaset<<<gridSpace, blockSpace>>>(width, height, image); // Call kernel
+	cudaDeviceSynchronize(); // Wait for kernel to finish
+	std::cout << "Done!" << std::endl;
 
 	// Save img buffer to png file
-	printf("Saving png...");
-	lodepng_encode32_file(
-		"C:\\Users\\akans\\Desktop\\fractal.png", 
-		(const unsigned char*)image, width, height);
-	printf("Done!\n");
+	std::cout << "Saving png...";
+	lodepng_encode32_file(filename, image, width, height);
+	std::cout << "Done!" << std::endl;
 	
-	// Free resources and exit
+	// Free image buffer and exit
 	cudaFree(image);
 	return 0;
 }
