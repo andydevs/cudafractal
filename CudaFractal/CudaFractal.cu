@@ -11,11 +11,13 @@
 #define IMAGE_ALPHA_CHANNEL 3
 
 /**
- * Runs an operation on the given pixel space
+ * It assigns the corresponding pixel of the thread to a corresponding starting 
+ * complex number z. Then, it runs the juliaset algorithm on z. Finally, it 
+ * computes the color from the resulting iteration number and assigns that 
+ * color to the thread's corresponding pixel in the image.
  *
  * @param img_w the width of the image
  * @param img_h the height of the image
- * @param img_c the color channels of the image
  * @param img   the image buffer
  */
 __global__
@@ -73,34 +75,51 @@ void juliaset(unsigned img_w, unsigned img_h, unsigned char* img) {
  */
 int main(int argc, const char* argv[]) {
 	// Image meta
-	unsigned img_w = 1920;
-	unsigned img_h = 1080;
-	unsigned img_l = img_h*img_w*IMAGE_NUM_CHANNELS;
-	unsigned char* img;
+	unsigned width = 1920;
+	unsigned height = 1080;
 
-	// Process meta
-	int block_n = 8;
-	int grid_n = (img_w > img_h ? img_w : img_h) / block_n;
-	dim3 blockSize(block_n, block_n);
-	dim3 gridSize(grid_n, grid_n);
+	// Image buffer info
+	unsigned char* image;
+	unsigned length = width*height*IMAGE_NUM_CHANNELS;
 
-	// Cuda image buffer
-	cudaMallocManaged(&img, sizeof(unsigned char)*img_l);
+	// Block space
+	// Using 8x8 thread block space because that 
+	// divides evenly into most standard resolutions
+	int blockSize = 8;
+	dim3 blockSpace(blockSize, blockSize);
+		
+	// Grid space
+	// Find the largest side of the image rectangle 
+	// and make a square out of that side. Divide 
+	// number oftotal "threads" by the block size. 
+	// This is the number of the blocks in the grid
+	int gridSize = (width >= height ? width : height) / blockSize;
+	dim3 gridSpace(gridSize, gridSize);
 
-	// Call Cuda Routine
+	// NOTE: 
+	//	Investigate why grid spaces or block spaces 
+	//	do not work in this case when made rectangular...
+
+	// Create a cuda-managed image buffer and save location at img
+	cudaMallocManaged(&image, sizeof(unsigned char)*length);
+
+	// Where the magic happens...
+	// Call Cuda Routine on the given grid space of blocks
+	// Each block being a block space of threads.
+	// Each thread computes a separate pixel in the JuliaSet
 	printf("Running CUDA routine...");
-	juliaset<<<gridSize, blockSize>>>(img_w, img_h, img);
+	juliaset<<<gridSpace, blockSpace>>>(width, height, img);
 	cudaDeviceSynchronize();
 	printf("Done!\n");
 
-	// Save to png file
+	// Save img buffer to png file
 	printf("Saving png...");
 	lodepng_encode32_file(
 		"C:\\Users\\akans\\Desktop\\fractal.png", 
-		(const unsigned char*)img, img_w, img_h);
+		(const unsigned char*)image, width, height);
 	printf("Done!\n");
 	
 	// Free resources and exit
-	cudaFree(img);
+	cudaFree(image);
 	return 0;
 }
