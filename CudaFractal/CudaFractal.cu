@@ -1,5 +1,6 @@
 #include "lodepng.h"
 #include "cuda_runtime.h"
+#include "cuComplex.h"
 #include <iostream>
 
 // PNG Image format
@@ -8,6 +9,23 @@
 #define IMAGE_GREEN_CHANNEL 1
 #define IMAGE_BLUE_CHANNEL 2
 #define IMAGE_ALPHA_CHANNEL 3
+
+/**
+ * Returns complex from the given pixel in the image
+ * 
+ * @param x the x value of the pixel
+ * @param y the y value of the pixel
+ * @param w the width of the image
+ * @param h the height of the image
+ * 
+ * @return complex from the given pixel in the image
+ */
+static __device__ __host__ __inline__
+cuFloatComplex fromPixel(unsigned x, unsigned y, unsigned w, unsigned h) {
+	return make_cuFloatComplex(
+		-2.0 * ((float)w / h) * x / w + ((float)w / h),
+		2.0 * y / h - 1.0);
+}
 
 /**
  * The iterative process in the julia set. Computes z = z^2 + c 
@@ -22,63 +40,22 @@
  * @return number of iterations before abs(z) >= 2 (max 255).
  */
 static __device__ __host__ __inline__
-unsigned char iterations(float wr, float wi, float cr, float ci) {
-	// Set z values
-	float zr = wr;
-	float zi = wi;
-	
-	/**
-	 * Since the complex values are being calculated manually (for now),
-	 * a copy of the last real value must be kept in order to properly
-	 * calculate both the next imaginary value. Since the imaginary value
-	 * is calculated after the next real is calculated, using the same
-	 * buffer would mean using the new calculated real as part of the
-	 * calculation for the new imaginary value, which would produce
-	 * the wrong imaginary value for the iteration.
-	 */
-	float lr;
+unsigned char iterations(cuFloatComplex w, cuFloatComplex c) {
+	// Set initial z value
+	cuFloatComplex z = w;
 
 	// Algorithm
 	unsigned char iters;
 	for (iters = 0; iters < 255; iters++) {
-		// Break if abs(z)**2 >= 4
-		if (zr*zr + zi*zi >= 4) break;
+		// Break if abs(z) >= 2
+		if (cuCabsf(z) >= 2) break;
 
 		// Run iteration of z: z = z^2 + c
-		lr = zr;
-		zr = lr*lr - zi*zi + cr;
-		zi = 2 * lr*zi + ci;
+		z = cuCaddf(cuCmulf(z, z), c);
 	}
 
 	// Return iterations
 	return iters;
-}
-
-/**
- * Returns the real value of the calculated complex of the pixel in the image
- *
- * @param x the x value of the pixel
- * @param w the width of the image
- * @param h the height of the image
- *
- * @return the real value of the calculated complex of the pixel in the image
- */
-static __device__ __host__ __inline__
-float pixelReal(unsigned x, unsigned w, unsigned h) {
-	return -2.0 * ((float)w / h) * x / w + ((float)w / h);
-}
-
-/**
- * Returns the imaginary value of the calculated complex of the pixel in the image
- *
- * @param y the y value of the pixel
- * @param h the height of the image
- *
- * @return the imaginary value of the calculated complex of the pixel in the image
- */
-static __device__ __host__ __inline__
-float pixelImag(unsigned y, unsigned h) {
-	return 2.0 * y / h - 1.0;
 }
 
 /**
@@ -92,17 +69,14 @@ float pixelImag(unsigned y, unsigned h) {
  * @param img   the image buffer
  */
 __global__
-void juliaset(float cr, float ci, unsigned w, unsigned h, unsigned char* img) {
+void juliaset(cuFloatComplex c, unsigned w, unsigned h, unsigned char* img) {
 	// Get x and y of image (don't run pixels beyond size on img)
 	unsigned y = blockIdx.x * blockDim.x + threadIdx.x;
 	unsigned x = blockIdx.y * blockDim.y + threadIdx.y;
 	if (x >= w || y >= h) return;
 
 	// Run iterations algorithm, setting w to the pixel complex
-	char iters = iterations(
-		pixelReal(x, w, h), 
-		pixelImag(y, h), 
-		cr, ci);
+	char iters = iterations(fromPixel(x, y, w, h), c);
 
 	// Append colors to image buffer
 	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_RED_CHANNEL]   = iters; // Red
@@ -126,6 +100,9 @@ int main(int argc, const char* argv[]) {
 	unsigned width = 1920;
 	unsigned height = 1080;
 	const char* filename = "C:\\Users\\akans\\Desktop\\fractal.png";
+
+	// Create constant
+	cuFloatComplex cons = make_cuFloatComplex(consr, consi);
 
 	// Block space
 	// Using 8x8 thread block space because that 
@@ -155,7 +132,7 @@ int main(int argc, const char* argv[]) {
 	// Each block being a block space of threads.
 	// Each thread computes a separate pixel in the JuliaSet
 	std::cout << "Running JuliaSet kernel...";
-	juliaset<<<gridSpace, blockSpace>>>(consr, consi, width, height, image);
+	juliaset<<<gridSpace, blockSpace>>>(cons, width, height, image);
 	cudaDeviceSynchronize(); // Wait for kernel to finish
 	std::cout << "Done!" << std::endl;
 
