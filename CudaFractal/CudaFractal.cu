@@ -32,10 +32,8 @@ cuFloatComplex fromPixel(unsigned x, unsigned y, unsigned w, unsigned h) {
  * iteratively, with z being initialized to w. Returns the number 
  * of iterations before abs(z) >= 2 (max 255).
  *
- * @param wr real part of w complex
- * @param wi imaginary part of w complex
- * @param cr real part of c complex
- * @param ci imaginary part of c complex
+ * @param w complex value w
+ * @param c complex value c
  *
  * @return number of iterations before abs(z) >= 2 (max 255).
  */
@@ -64,9 +62,10 @@ unsigned char iterations(cuFloatComplex w, cuFloatComplex c) {
  * Finally, it computes the color from the resulting iteration number and assigns 
  * that color to the thread's corresponding pixel in the image.
  *
- * @param img_w the width of the image
- * @param img_h the height of the image
- * @param img   the image buffer
+ * @param c   the complex constant c
+ * @param w   the width of the image
+ * @param h   the height of the image
+ * @param img the image buffer
  */
 __global__
 void juliaset(cuFloatComplex c, unsigned w, unsigned h, unsigned char* img) {
