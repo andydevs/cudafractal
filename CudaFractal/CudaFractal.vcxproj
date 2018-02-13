@@ -89,11 +89,13 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CudaCompile Include="CudaFractal.cu" />
+    <CudaCompile Include="DeviceCode.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lodepng.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DeviceCode.cuh" />
     <ClInclude Include="lodepng.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
