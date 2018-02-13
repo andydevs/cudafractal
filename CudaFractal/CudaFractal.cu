@@ -2,6 +2,8 @@
 #include "cuda_runtime.h"
 #include "cuComplex.h"
 #include <iostream>
+#include <string>
+#include <boost\program_options.hpp>
 
 // PNG Image format
 #define IMAGE_NUM_CHANNELS 4
@@ -9,6 +11,9 @@
 #define IMAGE_GREEN_CHANNEL 1
 #define IMAGE_BLUE_CHANNEL 2
 #define IMAGE_ALPHA_CHANNEL 3
+
+// Program options
+namespace po = boost::program_options;
 
 /**
  * Returns complex from the given pixel in the image
@@ -74,6 +79,7 @@ void juliaset(cuFloatComplex c, unsigned w, unsigned h, unsigned char* img) {
 	unsigned x = blockIdx.y * blockDim.y + threadIdx.y;
 	if (x >= w || y >= h) return;
 
+
 	// Run iterations algorithm, setting w to the pixel complex
 	char iters = iterations(fromPixel(x, y, w, h), c);
 
@@ -94,11 +100,28 @@ void juliaset(cuFloatComplex c, unsigned w, unsigned h, unsigned char* img) {
  */
 int main(int argc, const char* argv[]) {
 	// Soon-to-be user-inputted data
-	float consr = -0.4;
-	float consi = 0.6;
-	unsigned width = 1920;
-	unsigned height = 1080;
-	const char* filename = "C:\\Users\\akans\\Desktop\\fractal.png";
+	float consr, consi;
+	unsigned width, height;
+	std::string filename;
+
+	// Get user input
+	po::options_description options("> CUDAFractal [options]");
+	options.add_options()
+		("help", "print help message")
+		("cr", po::value<float>(&consr)->default_value(-0.4), "real value of c")
+		("ci", po::value<float>(&consi)->default_value(0.6), "imaginary value of c")
+		("width", po::value<unsigned>(&width)->default_value(1920), "image width")
+		("height", po::value<unsigned>(&height)->default_value(1080), "image height")
+		("file", po::value<std::string>(&filename), "output file name");
+	po::variables_map vars;
+	po::store(po::parse_command_line(argc, argv, options), vars);
+	po::notify(vars);
+
+	// Exit if no filename specified!
+	if (filename.empty()) {
+		std::cout << "ERROR: No filename specified!" << std::endl;
+		return 1;
+	}
 
 	// Create constant
 	cuFloatComplex cons = make_cuFloatComplex(consr, consi);
@@ -137,7 +160,7 @@ int main(int argc, const char* argv[]) {
 
 	// Save img buffer to png file
 	std::cout << "Saving png...";
-	lodepng_encode32_file(filename, image, width, height);
+	lodepng_encode32_file(filename.c_str(), image, width, height);
 	std::cout << "Done!" << std::endl;
 	
 	// Free image buffer and exit
