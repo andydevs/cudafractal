@@ -1,6 +1,30 @@
 // Includes
 #include "DeviceCode.cuh"
 
+// Define max number of byte
+#define BYTE_MAX 255
+
+// Define byte type
+typedef unsigned char byte;
+
+/**
+ * A gradient value between the given from 
+ * and to values using iter value (generated 
+ * from number of iterations)
+ * 
+ * @param iter the iter value
+ * @param from the starting value
+ * @param to   the ending value
+ *
+ * @return resulting gradient value
+ */
+static __device__ __host__ __inline__
+byte gradient(byte iter, byte from, byte to) {
+	if (to == from) return from;
+	else if (to > from) return from + (to - from) * iter / BYTE_MAX;
+	else return from - (from - to) * iter / BYTE_MAX;
+}
+
 /**
  * Returns complex from the given pixel in the image
  *
@@ -59,19 +83,18 @@ unsigned char iterations(cuFloatComplex w, cuFloatComplex c) {
  * @param img the image buffer
  */
 __global__
-void juliaset(cuFloatComplex c, unsigned w, unsigned h, unsigned char* img) {
+void juliaset(cuFloatComplex c, unsigned w, unsigned h, byte* img) {
 	// Get x and y of image (don't run pixels beyond size on img)
 	unsigned y = blockIdx.x * blockDim.x + threadIdx.x;
 	unsigned x = blockIdx.y * blockDim.y + threadIdx.y;
 	if (x >= w || y >= h) return;
 
-
 	// Run iterations algorithm, setting w to the pixel complex
-	char iters = iterations(fromPixel(x, y, w, h), c);
+	byte iters = iterations(fromPixel(x, y, w, h), c);
 
 	// Append colors to image buffer
-	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_RED_CHANNEL] = iters; // Red
-	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_GREEN_CHANNEL] = iters; // Green
-	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_BLUE_CHANNEL] = iters; // Blue
+	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_RED_CHANNEL] = gradient(iters, 0, 163); // Red
+	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_GREEN_CHANNEL] = gradient(iters, 0, 255); // Green
+	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_BLUE_CHANNEL] = gradient(iters, 0, 0); // Blue
 	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_ALPHA_CHANNEL] = 0xff;  // Alpha
 }
