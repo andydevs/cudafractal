@@ -15,8 +15,8 @@
 static __device__ __host__ __inline__
 cuFloatComplex fromPixel(unsigned x, unsigned y, unsigned w, unsigned h) {
 	return make_cuFloatComplex(
-		-2.0 * ((float)w / h) * x / w + ((float)w / h),
-		2.0 * y / h - 1.0);
+		((float)-2.0) * ((float)w / h) * x / w + ((float)w / h),
+		((float)2.0) * y / h - ((float)1.0));
 }
 
 /**
@@ -69,9 +69,23 @@ void juliaset(cuFloatComplex c, unsigned w, unsigned h, byte* img) {
 	// Run iterations algorithm, setting w to the pixel complex
 	byte iters = iterations(fromPixel(x, y, w, h), c);
 
-	// Append colors to image buffer
-	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_RED_CHANNEL] = gradient(iters, 0, 163); // Red
-	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_GREEN_CHANNEL] = gradient(iters, 0, 255); // Green
-	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_BLUE_CHANNEL] = gradient(iters, 0, 0); // Blue
-	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_ALPHA_CHANNEL] = 0xff;  // Alpha
+	// Starting color
+	color start;
+	start.r = 0;
+	start.g = 0;
+	start.b = 0;
+	start.a = 0xff;
+
+	// Ending color
+	color end;
+	end.r = 163;
+	end.g = 255;
+	end.b = 0;
+	end.a = 0xff;
+
+	// Gradient color
+	color col = colorGrad(iters, start, end);
+
+	// Set pixel in image
+	setPixel(img, w, h, x, y, col);
 }
