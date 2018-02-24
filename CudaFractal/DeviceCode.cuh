@@ -2,14 +2,8 @@
 #define __FRACTAL_DEVICE_CODE__
 
 // Includes
+#include "Super.cuh"
 #include <cuComplex.h>
-
-// PNG Image format
-#define IMAGE_NUM_CHANNELS 4
-#define IMAGE_RED_CHANNEL 0
-#define IMAGE_GREEN_CHANNEL 1
-#define IMAGE_BLUE_CHANNEL 2
-#define IMAGE_ALPHA_CHANNEL 3
 
 /**
 * It assigns the corresponding pixel of the thread to a corresponding starting

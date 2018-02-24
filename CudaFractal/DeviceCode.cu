@@ -1,12 +1,6 @@
 // Includes
 #include "DeviceCode.cuh"
 
-// Define max number of byte
-#define BYTE_MAX 255
-
-// Define byte type
-typedef unsigned char byte;
-
 /**
  * A gradient value between the given from 
  * and to values using iter value (generated 
