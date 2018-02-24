@@ -95,6 +95,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     <ClCompile Include="lodepng.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Coloring.cuh" />
     <ClInclude Include="DeviceCode.cuh" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="Super.cuh" />
