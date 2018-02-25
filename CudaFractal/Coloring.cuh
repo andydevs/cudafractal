@@ -28,6 +28,56 @@ color rgba(byte r, byte g, byte b, byte a) {
 }
 
 /**
+* Creates a color from the given rgb values (a is default 0xff)
+*
+* @param r the red channel of the color
+* @param g the green channel of the color
+* @param b the blue channel of the color
+*
+* @return color from given rgb values
+*/
+__device__ __host__ __inline__
+color rgb(byte r, byte g, byte b) {
+	color out;
+	out.r = r;
+	out.g = g;
+	out.b = b;
+	out.a = 0xff;
+	return out;
+}
+
+/**
+* Creates a color from the given hex value
+*
+* @param val the hex value
+*
+* @return color from hex value
+*/
+__device__ __host__ __inline__
+color hexa(unsigned val) {
+	return rgba(
+		(val & 0xff000000) >> 24,
+		(val & 0x00ff0000) >> 16,
+		(val & 0x0000ff00) >> 8,
+		(val & 0x000000ff));
+}
+
+/**
+ * Creates a color from the given hex value (alpha is default 0xff)
+ *
+ * @param val the hex value
+ *
+ * @return color from hex value
+ */
+__device__ __host__ __inline__
+color hex(unsigned val) {
+	return rgb(
+		(val & 0xff0000) >> 16,
+		(val & 0x00ff00) >> 8,
+		(val & 0x0000ff));
+}
+
+/**
  * A gradient value between the given from
  * and to values using iter value (generated
  * from number of iterations)
