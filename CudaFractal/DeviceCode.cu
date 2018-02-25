@@ -70,7 +70,7 @@ void juliaset(cuFloatComplex c, unsigned w, unsigned h, byte* img) {
 	byte iters = iterations(fromPixel(x, y, w, h), c);
 
 	// Gradient color
-	color col = colorGrad(iters, hex(0x000000), hex(0xa3ff00));
+	color col = colorGrad(iters, color::hex(0x000000), color::hex(0xa3ff00));
 
 	// Set pixel in image
 	setPixel(img, w, h, x, y, col);

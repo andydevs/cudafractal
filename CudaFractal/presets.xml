@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<presets>
+  <entry>
+    <name>Nvidia</name>
+    <type>Gradient</type>
+    <first>0x000000</first>
+    <second>0xa3ff00</second>
+  </entry>
+</presets>
