@@ -8,16 +8,36 @@
 typedef struct { byte r, g, b, a; } color;
 
 /**
-* A gradient value between the given from
-* and to values using iter value (generated
-* from number of iterations)
-*
-* @param iter the iter value
-* @param from the starting value
-* @param to   the ending value
-*
-* @return resulting gradient value
-*/
+ * Creates a color from the given rgba values
+ *
+ * @param r the red channel of the color
+ * @param g the green channel of the color
+ * @param b the blue channel of the color
+ * @param a the alpha channel of the color
+ *
+ * @return color from given rgba values
+ */
+__device__ __host__ __inline__
+color rgba(byte r, byte g, byte b, byte a) {
+	color out;
+	out.r = r;
+	out.g = g;
+	out.b = b;
+	out.a = a;
+	return out;
+}
+
+/**
+ * A gradient value between the given from
+ * and to values using iter value (generated
+ * from number of iterations)
+ *
+ * @param iter the iter value
+ * @param from the starting value
+ * @param to   the ending value
+ *
+ * @return resulting gradient value
+ */
 __device__ __host__ __inline__
 byte gradient(byte iter, byte from, byte to) {
 	if (to == from) return from;

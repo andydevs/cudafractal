@@ -69,22 +69,10 @@ void juliaset(cuFloatComplex c, unsigned w, unsigned h, byte* img) {
 	// Run iterations algorithm, setting w to the pixel complex
 	byte iters = iterations(fromPixel(x, y, w, h), c);
 
-	// Starting color
-	color start;
-	start.r = 0;
-	start.g = 0;
-	start.b = 0;
-	start.a = 0xff;
-
-	// Ending color
-	color end;
-	end.r = 163;
-	end.g = 255;
-	end.b = 0;
-	end.a = 0xff;
-
 	// Gradient color
-	color col = colorGrad(iters, start, end);
+	color col = colorGrad(iters,
+		rgba(0, 0, 0, 0xff),
+		rgba(163, 255, 0, 0xff));
 
 	// Set pixel in image
 	setPixel(img, w, h, x, y, col);
