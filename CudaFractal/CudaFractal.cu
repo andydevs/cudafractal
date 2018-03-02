@@ -48,6 +48,11 @@ int main(int argc, const char* argv[]) {
 	// Create constant
 	cuFloatComplex cons = make_cuFloatComplex(consr, consi);
 
+	// Get colormap
+	colormap cmap = colormap::gradient(
+		color::hex(0x000000), 
+		color::hex(0xa3ff00));
+
 	// Block space
 	// Using 8x8 thread block space because that 
 	// divides evenly into most standard resolutions
@@ -76,7 +81,7 @@ int main(int argc, const char* argv[]) {
 	// Each block being a block space of threads.
 	// Each thread computes a separate pixel in the JuliaSet
 	std::cout << "Running JuliaSet kernel...";
-	juliaset<<<gridSpace, blockSpace>>>(cons, width, height, image);
+	juliaset<<<gridSpace, blockSpace>>>(cons, cmap, width, height, image);
 	cudaDeviceSynchronize(); // Wait for kernel to finish
 	std::cout << "Done!" << std::endl;
 

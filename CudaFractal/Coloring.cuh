@@ -4,23 +4,7 @@
 // Includes
 #include "Super.cuh"
 
-/**
- * A gradient value between the given from
- * and to values using iter value (generated
- * from number of iterations)
- *
- * @param iter the iter value
- * @param from the starting value
- * @param to   the ending value
- *
- * @return resulting gradient value
- */
-__device__ __host__ __inline__
-byte gradient(byte iter, byte from, byte to) {
-	if (to == from) return from;
-	else if (to > from) return from + (to - from) * iter / BYTE_MAX;
-	else return from - (from - to) * iter / BYTE_MAX;
-}
+// --------------------------------------- COLOR STRUCT ---------------------------------------
 
 // Color struct
 struct color { 
@@ -97,6 +81,26 @@ struct color {
 	};
 };
 
+// ------------------------------------ HELPER FUNCTIONS ------------------------------------
+
+/**
+ * A gradient value between the given from
+ * and to values using iter value (generated
+ * from number of iterations)
+ *
+ * @param iter the iter value
+ * @param from the starting value
+ * @param to   the ending value
+ *
+ * @return resulting gradient value
+ */
+__device__ __host__ __inline__
+byte byteGrad(byte iter, byte from, byte to) {
+	if (to == from) return from;
+	else if (to > from) return from + (to - from) * iter / BYTE_MAX;
+	else return from - (from - to) * iter / BYTE_MAX;
+}
+
 /**
  * Gradient map between two colors
  *
@@ -107,14 +111,90 @@ struct color {
  * @return resulting gradient color
  */
 __device__ __host__ __inline__
-color colorGrad(byte iter, color from, color to) {
-	color out;
-	out.r = gradient(iter, from.r, to.r);
-	out.g = gradient(iter, from.g, to.g);
-	out.b = gradient(iter, from.b, to.b);
-	out.a = gradient(iter, from.a, to.a);
-	return out;
+color gradient(byte iter, color from, color to) {
+	return color(
+		byteGrad(iter, from.r, to.r),
+		byteGrad(iter, from.g, to.g),
+		byteGrad(iter, from.b, to.b),
+		byteGrad(iter, from.a, to.a));
 }
+
+// -------------------------------------- COLORMAPS ---------------------------------------
+
+// Colormap type
+enum colormap_type {
+	GRADIENT
+};
+
+// Colormap struct
+struct colormap {
+	// Data
+	colormap_type type;
+	color from;
+	color to;
+
+	/**
+	 * Empty constructor
+	 */
+	__device__ __host__
+	colormap() {};
+
+	/**
+	 * Copy constructor
+	 *
+	 * @param other the other colormap to copy
+	 */
+	__device__ __host__
+	colormap(const colormap& other) :
+		type(other.type),
+		from(other.from),
+		to(other.to) {};
+
+	/**
+	 * Creates a new gradient colormap with the given from and to colors
+	 *
+	 * @param from the start color
+	 * @param to the end color
+	 */
+	__device__ __host__
+	colormap(color from, color to) :
+		type(GRADIENT),
+		from(from),
+		to(to) {};
+	
+	/**
+	 * Creates a new gradient colormap with the given from and to values
+	 *
+	 * @param from the start color
+	 * @param to the end color
+	 *
+	 * @return new gradient colormap
+	 */
+	__device__ __host__
+	static colormap gradient(color from, color to) {
+		return colormap(from, to);
+	};
+};
+
+/**
+ * Maps the given iter value to a color according to the given colormap
+ *
+ * @param cmap the colormap being used
+ * @param iter the iterations value
+ *
+ * @return color mapped by the given iter value
+ */
+__device__ __host__ __inline__
+color map(colormap cmap, byte iter) {
+	switch (cmap.type)
+	{
+		case GRADIENT: return gradient(iter, cmap.from, cmap.to);
+		// Standard black to white colormap
+		default: return color(iter, iter, iter);
+	}
+};
+
+// -------------------------------------- SET PIXEL ----------------------------------------
 
 /**
  * Sets the pixel in the image to the given color

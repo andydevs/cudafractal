@@ -1,6 +1,5 @@
 // Includes
 #include "DeviceCode.cuh"
-#include "Coloring.cuh"
 
 /**
  * Returns complex from the given pixel in the image
@@ -54,24 +53,19 @@ unsigned char iterations(cuFloatComplex w, cuFloatComplex c) {
  * Finally, it computes the color from the resulting iteration number and assigns 
  * that color to the thread's corresponding pixel in the image.
  *
- * @param c   the complex constant c
- * @param w   the width of the image
- * @param h   the height of the image
- * @param img the image buffer
+ * @param c    the complex constant c
+ * @param cmap the colormap to use when mapping colors
+ * @param w    the width of the image
+ * @param h    the height of the image
+ * @param img  the image buffer
  */
 __global__
-void juliaset(cuFloatComplex c, unsigned w, unsigned h, byte* img) {
+void juliaset(cuFloatComplex c, colormap cmap, unsigned w, unsigned h, byte* img) {
 	// Get x and y of image (don't run pixels beyond size on img)
 	unsigned y = blockIdx.x * blockDim.x + threadIdx.x;
 	unsigned x = blockIdx.y * blockDim.y + threadIdx.y;
 	if (x >= w || y >= h) return;
 
-	// Run iterations algorithm, setting w to the pixel complex
-	byte iters = iterations(fromPixel(x, y, w, h), c);
-
-	// Gradient color
-	color col = colorGrad(iters, color::hex(0x000000), color::hex(0xa3ff00));
-
-	// Set pixel in image
-	setPixel(img, w, h, x, y, col);
+	// Run iterations algorithm, setting w to the pixel complex, then set pixel in image to mapped color
+	setPixel(img, w, h, x, y, map(cmap, iterations(fromPixel(x, y, w, h), c)));
 }
