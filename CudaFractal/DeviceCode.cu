@@ -67,5 +67,9 @@ void juliaset(cuFloatComplex c, colormap cmap, unsigned w, unsigned h, byte* img
 	if (x >= w || y >= h) return;
 
 	// Run iterations algorithm, setting w to the pixel complex, then set pixel in image to mapped color
-	setPixel(img, w, h, x, y, map(cmap, iterations(fromPixel(x, y, w, h), c)));
+	setPixel(img, w, h, x, y,
+		mapColor(cmap, 
+			iterations(
+				fromPixel(x, y, w, h), c
+	)));
 }

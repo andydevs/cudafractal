@@ -8,6 +8,8 @@
 #include <boost\program_options.hpp>
 #include <iostream>
 #include <string>
+#include <cstdio>
+#include <cmath>
 
 // Program options
 namespace po = boost::program_options;
@@ -49,9 +51,9 @@ int main(int argc, const char* argv[]) {
 	cuFloatComplex cons = make_cuFloatComplex(consr, consi);
 
 	// Get colormap
-	colormap cmap = colormap::gradient(
-		color::hex(0x000000), 
-		color::hex(0xa3ff00));
+	colormap cmap = colormap::sinusoid(
+		fColor(1.4f, 1.4f, 1.4f),
+		fColor(-2.0f, -3.0f, -4.0f));
 
 	// Block space
 	// Using 8x8 thread block space because that 
