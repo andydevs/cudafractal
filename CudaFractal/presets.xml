@@ -1,22 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <presets>
+  <preset>
+    <name>blackwhite</name>
+    <type>gradient</type>
+    <from>
+      <type>hex</type>
+      <value>0x000000</value>
+    </from>
+    <to>
+      <type>hex</type>
+      <value>0xffffff</value>
+    </to>
+  </preset>
   
   <preset>
     <name>nvidia</name>
     <type>gradient</type>
-    <start>
+    <from>
       <type>hex</type>
-      <hex>0x000000</hex>
-    </start>
-    <end>
+      <value>0x000000</value>
+    </from>
+    <to>
       <type>hex</type>
-      <hex>0xa3ff00</hex>
-    </end>
+      <value>0xa3ff00</value>
+    </to>
   </preset>
 
   <preset>
     <name>saffron</name>
-    <type>rainbow</type>
+    <type>sinusoid</type>
     <frequency r="1.4f" g="1.4f" b="1.4f"/>
     <phase r="-2.0f" g="-3.0f" b="-4.0f"/>
   </preset>

@@ -248,22 +248,6 @@ struct colormap {
 		alpha(0xff) {};
 
 	/**
-	 * Creates a new sinusoid colormap with the given 
-	 * frequency and phase colors
- 	 *
-	 * @param freq the frequency color
-	 * @param phase the phase color
-	 */
-	__device__ __host__
-	colormap(fColor freq, fColor phase) :
-		type(SINUSOID),
-		from(color::hex(0x000000)),
-		to(color::hex(0x000000)),
-		freq(freq),
-		phase(phase),
-		alpha(0xff) {};
-
-	/**
 	 * Creates a new sinusoid colormap with the given
 	 * frequency and phase colors
 	 *
@@ -294,19 +278,6 @@ struct colormap {
 
 	/**
 	 * Creates a new sinusoid colormap with the given
-	 * frequency and phase colors
-	 *
-	 * @param freq the frequency color
-	 * @param phase the phase color
-	 *
-	 * @return new sinusoid colormap
-	 */
-	static colormap sinusoid(fColor freq, fColor phase) {
-		return colormap(freq, phase);
-	};
-
-	/**
-	 * Creates a new sinusoid colormap with the given
 	 * frequency and phase colors and alpha channel
 	 *
 	 * @param freq the frequency color
@@ -315,7 +286,7 @@ struct colormap {
 	 *
 	 * @return new sinusoid colormap
 	 */
-	static colormap sinusoidWithAlpha(fColor freq, fColor phase, byte alpha) {
+	static colormap sinusoid(fColor freq, fColor phase, byte alpha) {
 		return colormap(freq, phase, alpha);
 	};
 };
