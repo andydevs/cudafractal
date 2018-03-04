@@ -1,9 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <presets>
-  <entry>
-    <name>Nvidia</name>
-    <type>Gradient</type>
-    <first>0x000000</first>
-    <second>0xa3ff00</second>
-  </entry>
+  
+  <preset>
+    <name>nvidia</name>
+    <type>gradient</type>
+    <start>
+      <type>hex</type>
+      <hex>0x000000</hex>
+    </start>
+    <end>
+      <type>hex</type>
+      <hex>0xa3ff00</hex>
+    </end>
+  </preset>
+
+  <preset>
+    <name>saffron</name>
+    <type>rainbow</type>
+    <frequency r="1.4f" g="1.4f" b="1.4f"/>
+    <phase r="-2.0f" g="-3.0f" b="-4.0f"/>
+  </preset>
+  
 </presets>
