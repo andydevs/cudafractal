@@ -208,6 +208,7 @@ struct colormap {
 	/**
 	 * Empty constructor
 	 */
+	__device__ __host__
 	colormap() :
 		type(GRADIENT),
 		from(color::hex(0x000000)),
@@ -221,6 +222,7 @@ struct colormap {
 	 *
 	 * @param other the other colormap to copy
 	 */
+	__device__ __host__
 	colormap(const colormap& other) :
 		type(other.type),
 		from(other.from),
@@ -236,6 +238,7 @@ struct colormap {
 	 * @param from the start color
 	 * @param to the end color
 	 */
+	__device__ __host__
 	colormap(color from, color to) :
 		type(GRADIENT),
 		from(from),
@@ -251,6 +254,7 @@ struct colormap {
 	 * @param freq the frequency color
 	 * @param phase the phase color
 	 */
+	__device__ __host__
 	colormap(fColor freq, fColor phase) :
 		type(SINUSOID),
 		from(color::hex(0x000000)),
@@ -267,6 +271,7 @@ struct colormap {
 	 * @param phase the phase color
 	 * @param alpha the alpha channel
 	 */
+	__device__ __host__
 	colormap(fColor freq, fColor phase, byte alpha) :
 		type(SINUSOID),
 		from(color::hex(0x000000)),
