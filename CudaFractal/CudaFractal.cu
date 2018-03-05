@@ -184,8 +184,8 @@ colormap parseColormapFromPreset(std::string name, const char* progpath) {
  * @return status code
  */
 int main(int argc, const char* argv[]) {
-
 	// Soon-to-be user-inputted data
+	bool help, mbrot;
 	float consr, consi;
 	unsigned width, height;
 	std::string cname, fname;
@@ -193,7 +193,8 @@ int main(int argc, const char* argv[]) {
 	// Get user input
 	po::options_description options("> CUDAFractal [options]");
 	options.add_options()
-		("help", "print help message")
+		("help", po::bool_switch(&help), "print help message")
+		("mbrot", po::bool_switch(&mbrot), "compute the mandelbrot fractal algorithm")
 		("cr", po::value<float>(&consr)->default_value(-0.4), "real value of c")
 		("ci", po::value<float>(&consi)->default_value(0.6), "imaginary value of c")
 		("width", po::value<unsigned>(&width)->default_value(1920), "image width")
@@ -254,11 +255,19 @@ int main(int argc, const char* argv[]) {
 	// Where the magic happens...
 	// Call CUDA kernel on the given grid space of blocks
 	// Each block being a block space of threads.
-	// Each thread computes a separate pixel in the JuliaSet
-	DOING("Running JuliaSet kernel");
-	juliaset<<<gridSpace, blockSpace>>>(cons, cmap, width, height, image);
-	cudaDeviceSynchronize(); // Wait for kernel to finish
-	DONE();
+	// Each thread computes a separate pixel in the Julia/mandelbrot set
+	if (mbrot) {
+		DOING("Running Mandelbrot set kernel");
+		mandelbrotset<<<gridSpace, blockSpace>>>(cmap, width, height, image);
+		cudaDeviceSynchronize(); // Wait for kernel to finish
+		DONE();
+	}
+	else {
+		DOING("Running Julia set kernel");
+		juliaset << <gridSpace, blockSpace >> > (cons, cmap, width, height, image);
+		cudaDeviceSynchronize(); // Wait for kernel to finish
+		DONE();
+	}
 
 	// Save img buffer to png file
 	DOING("Saving png");

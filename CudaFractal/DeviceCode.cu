@@ -14,8 +14,8 @@
 static __device__ __host__ __inline__
 cuFloatComplex fromPixel(unsigned x, unsigned y, unsigned w, unsigned h) {
 	return make_cuFloatComplex(
-		((float)-2.0) * ((float)w / h) * x / w + ((float)w / h),
-		((float)2.0) * y / h - ((float)1.0));
+		((float)2.0) * ((float)w/h) * x/w - ((float)w/h),
+		((float)2.0) * y/h - ((float)1.0));
 }
 
 /**
@@ -71,5 +71,32 @@ void juliaset(cuFloatComplex c, colormap cmap, unsigned w, unsigned h, byte* img
 		mapColor(cmap, 
 			iterations(
 				fromPixel(x, y, w, h), c
+	)));
+};
+
+/**
+* It assigns the corresponding pixel of the thread to a corresponding complex
+* constant number c and sets z to 0. Then, it runs the iteration algorithm on
+* z using the given c.Finally, it computes the color from the resulting iteration
+* number and assigns that color to the thread's corresponding pixel in the image.
+*
+* @param cmap the colormap to use when mapping colors
+* @param w    the width of the image
+* @param h    the height of the image
+* @param img  the image buffer
+*/
+__global__
+void mandelbrotset(colormap cmap, unsigned w, unsigned h, unsigned char* img) {
+	// Get x and y of image (don't run pixels beyond size on img)
+	unsigned y = blockIdx.x * blockDim.x + threadIdx.x;
+	unsigned x = blockIdx.y * blockDim.y + threadIdx.y;
+	if (x >= w || y >= h) return;
+
+	// Run iterations algorithm, setting w to 0 and c to the pixel complex, then set pixel in image to mapped color
+	setPixel(img, w, h, x, y,
+		mapColor(cmap,
+			iterations(
+				make_cuFloatComplex(0.0, 0.0),
+				fromPixel(x, y, w, h)
 	)));
 }
