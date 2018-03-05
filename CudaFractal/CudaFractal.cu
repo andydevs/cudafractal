@@ -25,23 +25,25 @@ namespace po = boost::program_options;
 namespace pt = boost::property_tree;
 
 /**
+ * Parses the hex value from the given string
  *
+ * @param hexstring the string to parse
  *
- *
- *
+ * @return the hex value
  */
 unsigned parseHexValue(std::string hexstring) {
 	unsigned value;
 	std::istringstream iss(hexstring);
 	iss >> std::hex >> value;
 	return value;
-}
+};
 
 /**
+ * Parses a color from the given tree
  *
+ * @param tree the property tree to parse
  *
- *
- *
+ * @return the color parsed from tree
  */
 color parseColorFromTree(pt::ptree tree) {
 	if (tree.get<std::string>("type") == "hex") {
@@ -67,10 +69,11 @@ color parseColorFromTree(pt::ptree tree) {
 };
 
 /**
+ * Parses a float color from the given property tree
  *
+ * @param tree the property tree to parse
  *
- *
- *
+ * @return the float color parsed from tree
  */
 fColor parseFColorFromTree(pt::ptree tree) {
 	return fColor(
@@ -80,10 +83,11 @@ fColor parseFColorFromTree(pt::ptree tree) {
 };
 
 /**
+ * Parses colormap from the given property tree
  *
+ * @param tree the property tree to parse
  *
- *
- *
+ * @return the colormap parsed from the tree
  */
 colormap parseColormapFromTree(pt::ptree tree) {
 	if (tree.get<std::string>("type") == "gradient")
@@ -99,10 +103,11 @@ colormap parseColormapFromTree(pt::ptree tree) {
 };
 
 /**
+ * Parses colormap from the preset with the given name
  *
+ * @param name the name of the colormap preset
  *
- *
- *
+ * @return the colormap preset
  */
 colormap parseColormapFromPreset(std::string name) {
 	// Default colormap
@@ -164,7 +169,7 @@ int main(int argc, const char* argv[]) {
 	po::notify(vars);
 
 	// Exit if no filename specified!
-	if (filename.empty()) {
+	if (fname.empty()) {
 		std::cout << "ERROR: No filename specified!" << std::endl;
 		return 1;
 	}
@@ -219,7 +224,7 @@ int main(int argc, const char* argv[]) {
 
 	// Save img buffer to png file
 	std::cout << "Saving png...";
-	lodepng_encode32_file(filename.c_str(), image, width, height);
+	lodepng_encode32_file(fname.c_str(), image, width, height);
 	std::cout << "Done!" << std::endl;
 	
 	// Free image buffer and exit
