@@ -92,7 +92,8 @@ void mandelbrotset(colormap cmap, unsigned w, unsigned h, unsigned char* img) {
 	unsigned x = blockIdx.y * blockDim.y + threadIdx.y;
 	if (x >= w || y >= h) return;
 
-	// Run iterations algorithm, setting w to 0 and c to the pixel complex, then set pixel in image to mapped color
+	// Run iterations algorithm, setting w to 0 and c to the pixel complex, 
+	// then set pixel in image to mapped color
 	setPixel(img, w, h, x, y,
 		mapColor(cmap,
 			iterations(
