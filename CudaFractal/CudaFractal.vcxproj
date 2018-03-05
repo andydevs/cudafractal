@@ -124,7 +124,9 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
     <ClInclude Include="Super.cuh" />
   </ItemGroup>
   <ItemGroup>
-    <Xml Include="presets.xml" />
+    <Xml Include="presets.xml">
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </Xml>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
