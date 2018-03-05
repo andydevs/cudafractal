@@ -21,10 +21,19 @@
 #include <string>
 #include <cstdio>
 #include <cmath>
+#include <ctime>
+
+// Start time
+clock_t start;
 
 // Macros
-#define DOING(task) std::cout << task << "...";
-#define DONE() std::cout << "Done!" << std::endl;
+#define DOING(task) \
+	std::cout << task << "..."; \
+	start = clock();
+#define DONE() \
+	std::cout << "Done! " \
+		<< (float)(clock() - start) / CLOCKS_PER_SEC \
+		<< "s" << std::endl;
 
 // Boost namespaces
 namespace po = boost::program_options;
@@ -175,6 +184,7 @@ colormap parseColormapFromPreset(std::string name, const char* progpath) {
  * @return status code
  */
 int main(int argc, const char* argv[]) {
+
 	// Soon-to-be user-inputted data
 	float consr, consi;
 	unsigned width, height;
@@ -201,18 +211,18 @@ int main(int argc, const char* argv[]) {
 	}
 
 	// Get colormap
-	DOING("Parsing colormap from preset")
-		colormap cmap;
-		try {
-			cmap = parseColormapFromPreset(cname, argv[0]);
-		}
-		catch (std::exception& err) {
-			std::cout << "ERROR (parsing colormap): ";
-			std::cout << err.what() << std::endl;
-			std::cout << "\"q\" to exit...";
-			char q; std::cin >> q;
-			return 1;
-		}
+	DOING("Parsing colormap")
+	colormap cmap;
+	try {
+		cmap = parseColormapFromPreset(cname, argv[0]);
+	}
+	catch (std::exception& err) {
+		std::cout << "ERROR (parsing colormap): ";
+		std::cout << err.what() << std::endl;
+		std::cout << "\"q\" to exit...";
+		char q; std::cin >> q;
+		return 1;
+	}
 	DONE();
 
 	// Create constant
@@ -246,13 +256,13 @@ int main(int argc, const char* argv[]) {
 	// Each block being a block space of threads.
 	// Each thread computes a separate pixel in the JuliaSet
 	DOING("Running JuliaSet kernel");
-		juliaset<<<gridSpace, blockSpace>>>(cons, cmap, width, height, image);
-		cudaDeviceSynchronize(); // Wait for kernel to finish
+	juliaset<<<gridSpace, blockSpace>>>(cons, cmap, width, height, image);
+	cudaDeviceSynchronize(); // Wait for kernel to finish
 	DONE();
 
 	// Save img buffer to png file
 	DOING("Saving png");
-		lodepng_encode32_file(fname.c_str(), image, width, height);
+	lodepng_encode32_file(fname.c_str(), image, width, height);
 	DONE();
 	
 	// Free image buffer and exit
