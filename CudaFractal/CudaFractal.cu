@@ -5,10 +5,15 @@
 #include "DeviceCode.cuh"
 #include "lodepng.h"
 #include <cuda_runtime.h>
+
+// Bosts
 #include <boost\program_options.hpp>
 #include <boost\property_tree\ptree.hpp>
 #include <boost\property_tree\xml_parser.hpp>
 #include <boost\foreach.hpp>
+#include <boost\filesystem.hpp>
+
+// Libraries
 #include <exception>
 #include <iostream>
 #include <fstream>
@@ -17,12 +22,32 @@
 #include <cstdio>
 #include <cmath>
 
-// Preset file
-#define PRESET_FILE "./presets.xml"
+// Macros
+#define DOING(task) std::cout << task << "...";
+#define DONE() std::cout << "Done!" << std::endl;
 
-// Program options
+// Boost namespaces
 namespace po = boost::program_options;
 namespace pt = boost::property_tree;
+namespace fs = boost::filesystem;
+
+// Preset file
+#define PRESET_FILE "presets.xml"
+
+/**
+ * Returns the location of the preset file given the
+ * location of the program
+ *
+ * @param argpath the location of the program
+ *
+ * @return the location of the preset file
+ */
+std::string getPresetFileLocation(const char* progpath) {
+	return fs::system_complete(fs::path(progpath))
+		.parent_path()
+		.append<std::string>(PRESET_FILE)
+		.string();
+};
 
 /**
  * Parses the hex value from the given string
@@ -106,15 +131,16 @@ colormap parseColormapFromTree(pt::ptree tree) {
  * Parses colormap from the preset with the given name
  *
  * @param name the name of the colormap preset
+ * @param progpath the path of the program file
  *
  * @return the colormap preset
  */
-colormap parseColormapFromPreset(std::string name) {
+colormap parseColormapFromPreset(std::string name, const char* progpath) {
 	// Default colormap
 	colormap cmap;
 
 	// Filestream
-	std::ifstream preset_file(PRESET_FILE);
+	std::ifstream preset_file(getPresetFileLocation(progpath));
 	try {
 
 		// Get ptree
@@ -162,7 +188,7 @@ int main(int argc, const char* argv[]) {
 		("ci", po::value<float>(&consi)->default_value(0.6), "imaginary value of c")
 		("width", po::value<unsigned>(&width)->default_value(1920), "image width")
 		("height", po::value<unsigned>(&height)->default_value(1080), "image height")
-		("cmap", po::value<std::string>(&cname)->default_value("blackwhite"), "colormap preset")
+		("cmap", po::value<std::string>(&cname)->default_value("nvidia"), "colormap preset")
 		("file", po::value<std::string>(&fname), "output file name");
 	po::variables_map vars;
 	po::store(po::parse_command_line(argc, argv, options), vars);
@@ -174,21 +200,23 @@ int main(int argc, const char* argv[]) {
 		return 1;
 	}
 
+	// Get colormap
+	DOING("Parsing colormap from preset")
+		colormap cmap;
+		try {
+			cmap = parseColormapFromPreset(cname, argv[0]);
+		}
+		catch (std::exception& err) {
+			std::cout << "ERROR (parsing colormap): ";
+			std::cout << err.what() << std::endl;
+			std::cout << "\"q\" to exit...";
+			char q; std::cin >> q;
+			return 1;
+		}
+	DONE();
+
 	// Create constant
 	cuFloatComplex cons = make_cuFloatComplex(consr, consi);
-
-	// Get colormap
-	colormap cmap;
-	try {
-		cmap = parseColormapFromPreset(cname);
-	}
-	catch (std::exception& err) {
-		std::cout << "ERROR (parsing colormap): ";
-		std::cout << err.what() << std::endl;
-		std::cout << "\"q\" to exit...";
-		char q; std::cin >> q;
-		return 1;
-	}
 
 	// Block space
 	// Using 8x8 thread block space because that 
@@ -217,15 +245,15 @@ int main(int argc, const char* argv[]) {
 	// Call CUDA kernel on the given grid space of blocks
 	// Each block being a block space of threads.
 	// Each thread computes a separate pixel in the JuliaSet
-	std::cout << "Running JuliaSet kernel...";
-	juliaset<<<gridSpace, blockSpace>>>(cons, cmap, width, height, image);
-	cudaDeviceSynchronize(); // Wait for kernel to finish
-	std::cout << "Done!" << std::endl;
+	DOING("Running JuliaSet kernel");
+		juliaset<<<gridSpace, blockSpace>>>(cons, cmap, width, height, image);
+		cudaDeviceSynchronize(); // Wait for kernel to finish
+	DONE();
 
 	// Save img buffer to png file
-	std::cout << "Saving png...";
-	lodepng_encode32_file(fname.c_str(), image, width, height);
-	std::cout << "Done!" << std::endl;
+	DOING("Saving png");
+		lodepng_encode32_file(fname.c_str(), image, width, height);
+	DONE();
 	
 	// Free image buffer and exit
 	cudaFree(image);

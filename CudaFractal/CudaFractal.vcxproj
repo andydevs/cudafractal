@@ -42,6 +42,12 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <CustomBuildAfterTargets>
+    </CustomBuildAfterTargets>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -58,11 +64,19 @@
     </Link>
     <PostBuildEvent>
       <Command>echo copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
-copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
+copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
+echo copy "$(ProjectDir)presets.xml" "$(OutDir)"
+copy "$(ProjectDir)presets.xml" "$(OutDir)"</Command>
     </PostBuildEvent>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
     </CudaCompile>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
@@ -81,11 +95,19 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     </Link>
     <PostBuildEvent>
       <Command>echo copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
-copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
+copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
+echo copy "$(ProjectDir)presets.xml" "$(OutDir)"
+copy "$(ProjectDir)presets.xml" "$(OutDir)"</Command>
     </PostBuildEvent>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
     </CudaCompile>
+    <CustomBuildStep>
+      <Command>
+      </Command>
+      <Message>
+      </Message>
+    </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
     <CudaCompile Include="CudaFractal.cu" />
