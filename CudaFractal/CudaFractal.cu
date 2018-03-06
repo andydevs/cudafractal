@@ -52,6 +52,10 @@ namespace fs = boost::filesystem;
  * @return the location of the preset file
  */
 std::string getPresetFileLocation(const char* progpath) {
+	std::cout << fs::system_complete(fs::path(progpath))
+		.parent_path()
+		.append<std::string>(PRESET_FILE)
+		.string() << std::endl;
 	return fs::system_complete(fs::path(progpath))
 		.parent_path()
 		.append<std::string>(PRESET_FILE)
@@ -220,9 +224,6 @@ int main(int argc, const char* argv[]) {
 	catch (std::exception& err) {
 		std::cout << "ERROR (parsing colormap): ";
 		std::cout << err.what() << std::endl;
-		std::cout << "\"q\" to exit...";
-		char q; std::cin >> q;
-		return 1;
 	}
 	DONE();
 
