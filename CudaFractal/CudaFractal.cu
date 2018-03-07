@@ -5,13 +5,7 @@
 #include "DeviceCode.cuh"
 #include "lodepng.h"
 #include <cuda_runtime.h>
-
-// Bosts
 #include <boost\program_options.hpp>
-#include <boost\property_tree\ptree.hpp>
-#include <boost\property_tree\xml_parser.hpp>
-#include <boost\foreach.hpp>
-#include <boost\filesystem.hpp>
 
 // Libraries
 #include <exception>
@@ -22,6 +16,7 @@
 #include <cstdio>
 #include <cmath>
 #include <ctime>
+#include <map>
 
 // Start time
 clock_t start;
@@ -37,143 +32,34 @@ clock_t start;
 
 // Boost namespaces
 namespace po = boost::program_options;
-namespace pt = boost::property_tree;
-namespace fs = boost::filesystem;
-
-// Preset file
-#define PRESET_FILE "presets.xml"
 
 /**
- * Returns the location of the preset file given the
- * location of the program
+ * Returns the preset colormap of the given name
  *
- * @param argpath the location of the program
- *
- * @return the location of the preset file
+ * @param name the name of the colormap
+ * 
+ * @return the preset colormap
  */
-std::string getPresetFileLocation(const char* progpath) {
-	return fs::system_complete(fs::path(progpath))
-		.parent_path()
-		.append<std::string>(PRESET_FILE)
-		.string();
+colormap fromPreset(std::string name) {
+	// Presets map
+	std::map<std::string, colormap> presets;
+
+	// Populate presets map
+	presets["blackwhite"] = colormap::gradient(
+		color::hex(0x000000), 
+		color::hex(0xffffff));
+	presets["nvidia"] = colormap::gradient(
+		color::hex(0x000000),
+		color::hex(0xa3ff00));
+	presets["saffron"] = colormap::sinusoid(
+		fColor(1.4, 1.4, 1.4),
+		fColor(-2.0, -3.0, -4.0),
+		0xff);
+
+	// Return appropriate preset
+	return presets[name];
 };
 
-/**
- * Parses the hex value from the given string
- *
- * @param hexstring the string to parse
- *
- * @return the hex value
- */
-unsigned parseHexValue(std::string hexstring) {
-	unsigned value;
-	std::istringstream iss(hexstring);
-	iss >> std::hex >> value;
-	return value;
-};
-
-/**
- * Parses a color from the given tree
- *
- * @param tree the property tree to parse
- *
- * @return the color parsed from tree
- */
-color parseColorFromTree(pt::ptree tree) {
-	if (tree.get<std::string>("type") == "hex") {
-		return color::hex(parseHexValue(tree.get<std::string>("value")));
-	}
-	else if (tree.get<std::string>("type") == "hexa") {
-		return color::hexa(parseHexValue(tree.get<std::string>("value")));
-	}
-	else if (tree.get<std::string>("type") == "rgb") {
-		return color(
-			tree.get<byte>("value.<xmlattr>.r"),
-			tree.get<byte>("value.<xmlattr>.g"),
-			tree.get<byte>("value.<xmlattr>.b"));
-	}
-	else if (tree.get<std::string>("type") == "rgba") {
-		return color(
-			tree.get<byte>("value.<xmlattr>.r"),
-			tree.get<byte>("value.<xmlattr>.g"),
-			tree.get<byte>("value.<xmlattr>.b"),
-			tree.get<byte>("value.<xmlattr>.a"));
-	}
-	else return color();
-};
-
-/**
- * Parses a float color from the given property tree
- *
- * @param tree the property tree to parse
- *
- * @return the float color parsed from tree
- */
-fColor parseFColorFromTree(pt::ptree tree) {
-	return fColor(
-		tree.get<float>("<xmlattr>.r"),
-		tree.get<float>("<xmlattr>.g"),
-		tree.get<float>("<xmlattr>.b"));
-};
-
-/**
- * Parses colormap from the given property tree
- *
- * @param tree the property tree to parse
- *
- * @return the colormap parsed from the tree
- */
-colormap parseColormapFromTree(pt::ptree tree) {
-	if (tree.get<std::string>("type") == "gradient")
-		return colormap::gradient(
-			parseColorFromTree(tree.get_child("from")),
-			parseColorFromTree(tree.get_child("to")));
-	else if (tree.get<std::string>("type") == "sinusoid")
-		return colormap::sinusoid(
-			parseFColorFromTree(tree.get_child("frequency")),
-			parseFColorFromTree(tree.get_child("phase")),
-			tree.get("alpha", 0xff));
-	else return colormap();
-};
-
-/**
- * Parses colormap from the preset with the given name
- *
- * @param name the name of the colormap preset
- * @param progpath the path of the program file
- *
- * @return the colormap preset
- */
-colormap parseColormapFromPreset(std::string name, const char* progpath) {
-	// Default colormap
-	colormap cmap;
-
-	// Filestream
-	std::ifstream preset_file(getPresetFileLocation(progpath));
-	try {
-
-		// Get ptree
-		pt::ptree presets;
-		read_xml(preset_file, presets);
-
-		// Get cmap from presets
-		pt::ptree preset;
-		BOOST_FOREACH(pt::ptree::value_type entry, presets.get_child("presets")) {
-			if (entry.second.get<std::string>("name") == name) {
-				cmap = parseColormapFromTree(entry.second);
-			}
-		}
-
-	}
-	catch (std::exception& err) {
-		preset_file.close();
-		throw err;
-	}
-
-	// Close and return
-	preset_file.close();
-	return cmap;
-}
 
 /**
  * The main procedure
@@ -211,19 +97,8 @@ int main(int argc, const char* argv[]) {
 		return 1;
 	}
 
-	// Get colormap
-	DOING("Parsing colormap")
-	colormap cmap;
-	try {
-		cmap = parseColormapFromPreset(cname, argv[0]);
-	}
-	catch (std::exception& err) {
-		std::cout << "ERROR (parsing colormap): ";
-		std::cout << err.what() << std::endl;
-	}
-	DONE();
-
-	// Create constant
+	// Get colormap and constant
+	colormap cmap = fromPreset(cname);
 	cuFloatComplex cons = make_cuFloatComplex(consr, consi);
 
 	// Block space

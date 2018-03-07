@@ -121,12 +121,6 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="Super.cuh" />
   </ItemGroup>
-  <ItemGroup>
-    <Xml Include="presets.xml">
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
-      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
-    </Xml>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
     <Import Project="$(VCTargetsPath)\BuildCustomizations\CUDA 9.1.targets" />
