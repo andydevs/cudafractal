@@ -32,8 +32,8 @@ clock_t start;
 	start = clock();
 #define DONE() \
 	std::cout << "Done! " \
-		<< (float)(clock() - start) / CLOCKS_PER_SEC \
-		<< "s" << std::endl;
+		<< (float)(clock() - start) / CLOCKS_PER_SEC << "s" \
+		<< std::endl;
 
 // Boost namespaces
 namespace po = boost::program_options;
