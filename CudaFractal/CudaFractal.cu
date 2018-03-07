@@ -52,10 +52,6 @@ namespace fs = boost::filesystem;
  * @return the location of the preset file
  */
 std::string getPresetFileLocation(const char* progpath) {
-	std::cout << fs::system_complete(fs::path(progpath))
-		.parent_path()
-		.append<std::string>(PRESET_FILE)
-		.string() << std::endl;
 	return fs::system_complete(fs::path(progpath))
 		.parent_path()
 		.append<std::string>(PRESET_FILE)
