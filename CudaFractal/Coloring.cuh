@@ -277,6 +277,19 @@ struct colormap {
 	};
 
 	/**
+	 * Creates a new sinusoid colormap with 
+	 * the given frequency and phase colors
+	 *
+	 * @param freq the frequency color
+	 * @param phase the phase color
+	 *
+	 * @return new sinusoid colormap
+	 */
+	static colormap sinusoid(fColor freq, fColor phase) {
+		return colormap(freq, phase, 0xff);
+	};
+
+	/**
 	 * Creates a new sinusoid colormap with the given
 	 * frequency and phase colors and alpha channel
 	 *
@@ -286,7 +299,7 @@ struct colormap {
 	 *
 	 * @return new sinusoid colormap
 	 */
-	static colormap sinusoid(fColor freq, fColor phase, byte alpha) {
+	static colormap sinusoidWithAlpha(fColor freq, fColor phase, byte alpha) {
 		return colormap(freq, phase, alpha);
 	};
 };

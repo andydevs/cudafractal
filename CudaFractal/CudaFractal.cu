@@ -45,16 +45,33 @@ colormap fromPreset(std::string name) {
 	std::map<std::string, colormap> presets;
 
 	// Populate presets map
-	presets["blackwhite"] = colormap::gradient(
+	presets["noir"] = colormap::gradient(
 		color::hex(0x000000),
 		color::hex(0xffffff));
+	presets["ink"] = colormap::gradient(
+		color::hex(0xffffff),
+		color::hex(0x000000));
 	presets["nvidia"] = colormap::gradient(
 		color::hex(0x000000),
 		color::hex(0xa3ff00));
 	presets["saffron"] = colormap::sinusoid(
 		fColor(1.4, 1.4, 1.4),
-		fColor(-2.0, -3.0, -4.0),
-		0xff);
+		fColor(2.0, 3.0, 4.0));
+	presets["flower"] = colormap::sinusoid(
+		fColor(0.7, 0.7, 0.7),
+		fColor(-2.0, -2.0, -1.0));
+	presets["psychedelic"] = colormap::sinusoid(
+		fColor(5.0, 5.0, 5.0),
+		fColor(4.1, 4.5, 5.0));
+	presets["psychedelic"] = colormap::sinusoid(
+		fColor(5.0, 5.0, 5.0),
+		fColor(4.1, 4.5, 5.0));
+	presets["ice"] = colormap::sinusoid(
+		fColor(2.0, 2.0, 0.1),
+		fColor(0.0, 0.0, 2.0));
+	presets["fruity"] = colormap::sinusoid(
+		fColor(5.0, 5.0, 5.0),
+		fColor(0.0, 4.5, 2.5));
 
 	// Return appropriate preset
 	return presets[name];
