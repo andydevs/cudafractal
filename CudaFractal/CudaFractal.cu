@@ -161,7 +161,7 @@ int main(int argc, const char* argv[]) {
 	}
 	else {
 		DOING("Running Julia set kernel");
-		juliaset<<<gridSpace, blockSpace>>>(scale, trans, cons, cmap, width, height, image);
+		juliaset<<<gridSpace, blockSpace>>>(cons, scale, trans, cmap, width, height, image);
 		cudaDeviceSynchronize(); // Wait for kernel to finish
 		DONE();
 	}
