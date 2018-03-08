@@ -8,6 +8,8 @@
  * @param y the y value of the pixel
  * @param w the width of the image
  * @param h the height of the image
+ * @param s the scale complex
+ * @param t the translation complex
  *
  * @return complex from the given pixel in the image
  */
@@ -57,6 +59,8 @@ unsigned char iterations(cuFloatComplex w, cuFloatComplex c) {
  * that color to the thread's corresponding pixel in the image.
  *
  * @param c    the complex constant c
+ * @param s    the scale complex
+ * @param t    the translation complex
  * @param cmap the colormap to use when mapping colors
  * @param w    the width of the image
  * @param h    the height of the image
@@ -78,16 +82,18 @@ void juliaset(cuFloatComplex c, cuFloatComplex s, cuFloatComplex t, colormap cma
 };
 
 /**
-* It assigns the corresponding pixel of the thread to a corresponding complex
-* constant number c and sets z to 0. Then, it runs the iteration algorithm on
-* z using the given c.Finally, it computes the color from the resulting iteration
-* number and assigns that color to the thread's corresponding pixel in the image.
-*
-* @param cmap the colormap to use when mapping colors
-* @param w    the width of the image
-* @param h    the height of the image
-* @param img  the image buffer
-*/
+ * It assigns the corresponding pixel of the thread to a corresponding complex
+ * constant number c and sets z to 0. Then, it runs the iteration algorithm on
+ * z using the given c.Finally, it computes the color from the resulting iteration
+ * number and assigns that color to the thread's corresponding pixel in the image.
+ *
+ * @param s the scale complex
+ * @param t the translation complex
+ * @param cmap the colormap to use when mapping colors
+ * @param w    the width of the image
+ * @param h    the height of the image
+ * @param img  the image buffer
+ */
 __global__
 void mandelbrotset(cuFloatComplex s, cuFloatComplex t, colormap cmap, unsigned w, unsigned h, unsigned char* img) {
 	// Get x and y of image (don't run pixels beyond size on img)
