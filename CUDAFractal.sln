@@ -10,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "InstallCudaFractal", "InstallCudaFractal\InstallCudaFractal.vdproj", "{11D5BBCA-1608-4DC5-816C-E725990A12E4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -23,6 +25,10 @@ Global
 		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.DefaultBuild|x64.Build.0 = Debug|x64
 		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.Release|x64.ActiveCfg = Release|x64
 		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.Release|x64.Build.0 = Release|x64
+		{11D5BBCA-1608-4DC5-816C-E725990A12E4}.Debug|x64.ActiveCfg = Debug
+		{11D5BBCA-1608-4DC5-816C-E725990A12E4}.DefaultBuild|x64.ActiveCfg = Debug
+		{11D5BBCA-1608-4DC5-816C-E725990A12E4}.Release|x64.ActiveCfg = Release
+		{11D5BBCA-1608-4DC5-816C-E725990A12E4}.Release|x64.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
