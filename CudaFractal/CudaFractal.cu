@@ -46,7 +46,7 @@ colormap fromPreset(std::string name) {
 
 	// Populate presets map
 	presets["blackwhite"] = colormap::gradient(
-		color::hex(0x000000), 
+		color::hex(0x000000),
 		color::hex(0xffffff));
 	presets["nvidia"] = colormap::gradient(
 		color::hex(0x000000),
