@@ -19,7 +19,7 @@
  * @param img  the image buffer
  */
 __global__
-void juliaset(cuFloatComplex c, colormap cmap, unsigned w, unsigned h, unsigned char* img);
+void juliaset(cuFloatComplex c, cuFloatComplex s, cuFloatComplex t, colormap cmap, unsigned w, unsigned h, unsigned char* img);
 
 /**
  * It assigns the corresponding pixel of the thread to a corresponding complex
@@ -33,6 +33,6 @@ void juliaset(cuFloatComplex c, colormap cmap, unsigned w, unsigned h, unsigned 
  * @param img  the image buffer
  */
 __global__
-void mandelbrotset(colormap cmap, unsigned w, unsigned h, unsigned char* img);
+void mandelbrotset(cuFloatComplex s, cuFloatComplex t, colormap cmap, unsigned w, unsigned h, unsigned char* img);
 
 #endif // !__FRACTAL_DEVICE_CODE__

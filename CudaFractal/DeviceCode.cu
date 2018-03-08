@@ -12,10 +12,13 @@
  * @return complex from the given pixel in the image
  */
 static __device__ __host__ __inline__
-cuFloatComplex fromPixel(unsigned x, unsigned y, unsigned w, unsigned h) {
-	return make_cuFloatComplex(
+cuFloatComplex fromPixel(unsigned x, unsigned y, unsigned w, unsigned h, cuFloatComplex s, cuFloatComplex t) {
+	cuFloatComplex z = make_cuFloatComplex(
 		((float)2.0) * ((float)w/h) * x/w - ((float)w/h),
 		((float)2.0) * y/h - ((float)1.0));
+
+	// Return transform
+	return cuCmulf(s, cuCaddf(t, z));
 }
 
 /**
@@ -60,7 +63,7 @@ unsigned char iterations(cuFloatComplex w, cuFloatComplex c) {
  * @param img  the image buffer
  */
 __global__
-void juliaset(cuFloatComplex c, colormap cmap, unsigned w, unsigned h, byte* img) {
+void juliaset(cuFloatComplex c, cuFloatComplex s, cuFloatComplex t, colormap cmap, unsigned w, unsigned h, byte* img) {
 	// Get x and y of image (don't run pixels beyond size on img)
 	unsigned y = blockIdx.x * blockDim.x + threadIdx.x;
 	unsigned x = blockIdx.y * blockDim.y + threadIdx.y;
@@ -70,7 +73,7 @@ void juliaset(cuFloatComplex c, colormap cmap, unsigned w, unsigned h, byte* img
 	setPixel(img, w, h, x, y,
 		mapColor(cmap, 
 			iterations(
-				fromPixel(x, y, w, h), c
+				fromPixel(x, y, w, h, s, t), c
 	)));
 };
 
@@ -86,7 +89,7 @@ void juliaset(cuFloatComplex c, colormap cmap, unsigned w, unsigned h, byte* img
 * @param img  the image buffer
 */
 __global__
-void mandelbrotset(colormap cmap, unsigned w, unsigned h, unsigned char* img) {
+void mandelbrotset(cuFloatComplex s, cuFloatComplex t, colormap cmap, unsigned w, unsigned h, unsigned char* img) {
 	// Get x and y of image (don't run pixels beyond size on img)
 	unsigned y = blockIdx.x * blockDim.x + threadIdx.x;
 	unsigned x = blockIdx.y * blockDim.y + threadIdx.y;
@@ -98,6 +101,6 @@ void mandelbrotset(colormap cmap, unsigned w, unsigned h, unsigned char* img) {
 		mapColor(cmap,
 			iterations(
 				make_cuFloatComplex(0.0, 0.0),
-				fromPixel(x, y, w, h)
+				fromPixel(x, y, w, h, s, t)
 	)));
 }

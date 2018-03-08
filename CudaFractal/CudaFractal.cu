@@ -89,7 +89,7 @@ colormap fromPreset(std::string name) {
 int main(int argc, const char* argv[]) {
 	// Soon-to-be user-inputted data
 	bool help, mbrot;
-	float consr, consi;
+	float consr, consi, zoom, rotate, transx, transy;
 	unsigned width, height;
 	std::string cname, fname;
 
@@ -102,6 +102,10 @@ int main(int argc, const char* argv[]) {
 		("ci", po::value<float>(&consi)->default_value(0.6), "imaginary value of c")
 		("width", po::value<unsigned>(&width)->default_value(1920), "image width")
 		("height", po::value<unsigned>(&height)->default_value(1080), "image height")
+		("zoom", po::value<float>(&zoom)->default_value(1.0f), "zoom value")
+		("rotate", po::value<float>(&rotate)->default_value(0.0f), "rotation value")
+		("transx", po::value<float>(&transx)->default_value(0.0f), "x translation")
+		("transy", po::value<float>(&transy)->default_value(0.0f), "y translation")
 		("cmap", po::value<std::string>(&cname)->default_value("nvidia"), "colormap preset")
 		("file", po::value<std::string>(&fname), "output file name");
 	po::variables_map vars;
@@ -114,9 +118,13 @@ int main(int argc, const char* argv[]) {
 		return 1;
 	}
 
-	// Get colormap and constant
+	// Get colormap and complex values
 	colormap cmap = fromPreset(cname);
 	cuFloatComplex cons = make_cuFloatComplex(consr, consi);
+	cuFloatComplex scale = make_cuFloatComplex(
+		cos(rotate*F_PI/180.0f)/zoom, 
+		sin(rotate*F_PI/180.0f)/zoom);
+	cuFloatComplex trans = make_cuFloatComplex(transx, transy);
 
 	// Block space
 	// Using 8x8 thread block space because that 
@@ -147,13 +155,13 @@ int main(int argc, const char* argv[]) {
 	// Each thread computes a separate pixel in the Julia/mandelbrot set
 	if (mbrot) {
 		DOING("Running Mandelbrot set kernel");
-		mandelbrotset<<<gridSpace, blockSpace>>>(cmap, width, height, image);
+		mandelbrotset<<<gridSpace, blockSpace>>>(scale, trans, cmap, width, height, image);
 		cudaDeviceSynchronize(); // Wait for kernel to finish
 		DONE();
 	}
 	else {
 		DOING("Running Julia set kernel");
-		juliaset<<<gridSpace, blockSpace>>>(cons, cmap, width, height, image);
+		juliaset<<<gridSpace, blockSpace>>>(scale, trans, cons, cmap, width, height, image);
 		cudaDeviceSynchronize(); // Wait for kernel to finish
 		DONE();
 	}
