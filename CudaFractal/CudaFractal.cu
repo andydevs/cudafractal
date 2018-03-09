@@ -63,15 +63,15 @@ colormap fromPreset(std::string name) {
 	presets["psychedelic"] = colormap::sinusoid(
 		fColor(5.0, 5.0, 5.0),
 		fColor(4.1, 4.5, 5.0));
-	presets["psychedelic"] = colormap::sinusoid(
-		fColor(5.0, 5.0, 5.0),
-		fColor(4.1, 4.5, 5.0));
 	presets["ice"] = colormap::sinusoid(
 		fColor(2.0, 2.0, 0.1),
 		fColor(0.0, 0.0, 2.0));
 	presets["fruity"] = colormap::sinusoid(
 		fColor(5.0, 5.0, 5.0),
 		fColor(0.0, 4.5, 2.5));
+	presets["newone"] = colormap::sinusoid(
+		fColor(0.0, 0.0, 0.0),
+		fColor(2.0, 4.0, 8.0));
 
 	// Return appropriate preset
 	return presets[name];
@@ -111,6 +111,12 @@ int main(int argc, const char* argv[]) {
 	po::variables_map vars;
 	po::store(po::parse_command_line(argc, argv, options), vars);
 	po::notify(vars);
+
+	// Print help message and exit if needed
+	if (help) {
+		std::cout << options << std::endl;
+		return 0;
+	}
 
 	// Exit if no filename specified!
 	if (fname.empty()) {
