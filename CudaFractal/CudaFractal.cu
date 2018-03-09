@@ -33,6 +33,50 @@ clock_t start;
 // Boost namespaces
 namespace po = boost::program_options;
 
+// Presets map
+bool uninitialized = true;
+std::map<std::string, colormap> presets;
+
+/**
+ * Initializes the presets map
+ */
+void initPresets() {
+	// Initialize if uninitialized
+	if (uninitialized) {
+		// Populate presets map
+		presets["noir"] = colormap::gradient(
+			color::hex(0x000000),
+			color::hex(0xffffff));
+		presets["ink"] = colormap::gradient(
+			color::hex(0xffffff),
+			color::hex(0x000000));
+		presets["nvidia"] = colormap::gradient(
+			color::hex(0x000000),
+			color::hex(0xa3ff00));
+		presets["saffron"] = colormap::sinusoid(
+			fColor(1.4, 1.4, 1.4),
+			fColor(2.0, 3.0, 4.0));
+		presets["flower"] = colormap::sinusoid(
+			fColor(0.7, 0.7, 0.7),
+			fColor(-2.0, -2.0, -1.0));
+		presets["psychedelic"] = colormap::sinusoid(
+			fColor(5.0, 5.0, 5.0),
+			fColor(4.1, 4.5, 5.0));
+		presets["ice"] = colormap::sinusoid(
+			fColor(2.0, 2.0, 0.1),
+			fColor(0.0, 0.0, 2.0));
+		presets["fruity"] = colormap::sinusoid(
+			fColor(5.0, 5.0, 5.0),
+			fColor(0.0, 4.5, 2.5));
+		presets["orchid"] = colormap::sinusoid(
+			fColor(1.00, 2.00, 2.00),
+			fColor(F_N1, F_N1, F_N1));
+
+		// Toggle uninitialized
+		uninitialized = false;
+	}
+};
+
 /**
  * Returns the preset colormap of the given name
  *
@@ -41,42 +85,20 @@ namespace po = boost::program_options;
  * @return the preset colormap
  */
 colormap fromPreset(std::string name) {
-	// Presets map
-	std::map<std::string, colormap> presets;
-
-	// Populate presets map
-	presets["noir"] = colormap::gradient(
-		color::hex(0x000000),
-		color::hex(0xffffff));
-	presets["ink"] = colormap::gradient(
-		color::hex(0xffffff),
-		color::hex(0x000000));
-	presets["nvidia"] = colormap::gradient(
-		color::hex(0x000000),
-		color::hex(0xa3ff00));
-	presets["saffron"] = colormap::sinusoid(
-		fColor(1.4, 1.4, 1.4),
-		fColor(2.0, 3.0, 4.0));
-	presets["flower"] = colormap::sinusoid(
-		fColor(0.7, 0.7, 0.7),
-		fColor(-2.0, -2.0, -1.0));
-	presets["psychedelic"] = colormap::sinusoid(
-		fColor(5.0, 5.0, 5.0),
-		fColor(4.1, 4.5, 5.0));
-	presets["ice"] = colormap::sinusoid(
-		fColor(2.0, 2.0, 0.1),
-		fColor(0.0, 0.0, 2.0));
-	presets["fruity"] = colormap::sinusoid(
-		fColor(5.0, 5.0, 5.0),
-		fColor(0.0, 4.5, 2.5));
-	presets["newone"] = colormap::sinusoid(
-		fColor(0.0, 0.0, 0.0),
-		fColor(2.0, 4.0, 8.0));
-
-	// Return appropriate preset
+	initPresets();
 	return presets[name];
 };
 
+/**
+ * Lists all presets available
+ */
+void listPresets() {
+	initPresets();
+	std::cout << "Presets Available:" << std::endl;
+	for each (std::pair<std::string, colormap> entry in presets) {
+		std::cout << "    " << entry.first << std::endl;
+	}
+};
 
 /**
  * The main procedure
@@ -88,7 +110,7 @@ colormap fromPreset(std::string name) {
  */
 int main(int argc, const char* argv[]) {
 	// Soon-to-be user-inputted data
-	bool help, mbrot;
+	bool help, cmaps, mbrot;
 	float consr, consi, zoom, rotate, transx, transy;
 	unsigned width, height;
 	std::string cname, fname;
@@ -97,6 +119,7 @@ int main(int argc, const char* argv[]) {
 	po::options_description options("> CUDAFractal [options]");
 	options.add_options()
 		("help", po::bool_switch(&help), "print help message")
+		("cmaps", po::bool_switch(&cmaps), "prints the list of colormap presets")
 		("mbrot", po::bool_switch(&mbrot), "compute the mandelbrot fractal algorithm")
 		("cr", po::value<float>(&consr)->default_value(-0.4), "real value of c")
 		("ci", po::value<float>(&consi)->default_value(0.6), "imaginary value of c")
@@ -111,6 +134,12 @@ int main(int argc, const char* argv[]) {
 	po::variables_map vars;
 	po::store(po::parse_command_line(argc, argv, options), vars);
 	po::notify(vars);
+
+	// List cmaps and exit
+	if (cmaps) {
+		listPresets();
+		return 0;
+	}
 
 	// Print help message and exit if needed
 	if (help) {
