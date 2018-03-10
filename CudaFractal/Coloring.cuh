@@ -4,7 +4,7 @@
 // Includes
 #include "Super.cuh"
 
-// Approx pi
+// Approx pi and subsequent measurements
 #define F_PI 3.1415926535897932f
 #define F_P1 F_PI/2
 #define F_N1 3*F_PI/2
@@ -201,6 +201,7 @@ enum colormap_type {
 struct colormap {
 	// Data
 	colormap_type type;
+	color colors;
 	color from;
 	color to;
 	fColor freq;

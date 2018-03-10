@@ -53,9 +53,9 @@ void initPresets() {
 		presets["nvidia"] = colormap::gradient(
 			color::hex(0x000000),
 			color::hex(0xa3ff00));
-		presets["saffron"] = colormap::sinusoid(
-			fColor(1.4, 1.4, 1.4),
-			fColor(2.0, 3.0, 4.0));
+		presets["orchid"] = colormap::gradient(
+			color::hex(0xeeeeff),
+			color::hex(0xff0000));
 		presets["flower"] = colormap::sinusoid(
 			fColor(0.7, 0.7, 0.7),
 			fColor(-2.0, -2.0, -1.0));
@@ -68,8 +68,17 @@ void initPresets() {
 		presets["fruity"] = colormap::sinusoid(
 			fColor(5.0, 5.0, 5.0),
 			fColor(0.0, 4.5, 2.5));
-		presets["orchid"] = colormap::sinusoid(
+		presets["sarree"] = colormap::sinusoid(
+			fColor(1.4, 1.4, 1.4),
+			fColor(2.0, 3.0, 4.0));
+		presets["sarree2"] = colormap::sinusoid(
 			fColor(1.00, 2.00, 2.00),
+			fColor(F_P1, F_P1, F_P1));
+		presets["lightgarden"] = colormap::sinusoid(
+			fColor(1.00, 2.00, 9.00),
+			fColor(F_N1, F_N1, F_N1));
+		presets["acid"] = colormap::sinusoid(
+			fColor(8.00, 9.00, 0.00),
 			fColor(F_N1, F_N1, F_N1));
 
 		// Toggle uninitialized
