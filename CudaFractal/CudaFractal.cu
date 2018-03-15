@@ -33,6 +33,8 @@ clock_t start;
 // Boost namespaces
 namespace po = boost::program_options;
 
+// --------------------------------- PRESET PARSE ---------------------------------
+
 // Presets map
 bool uninitialized = true;
 std::map<std::string, colormap> presets;
@@ -109,73 +111,21 @@ void listPresets() {
 	}
 };
 
-/**
- * The main procedure
- *
- * @param argc the number of command line args
- * @param argv the command line args
- *
- * @return status code
- */
-int main(int argc, const char* argv[]) {
-	// Soon-to-be user-inputted data
-	bool help, cmaps, mbrot;
-	float consr, consi, zoom, rotate, transx, transy;
-	unsigned width, height;
-	std::string cname, fname;
+// -------------------------------- GENERATOR CODE --------------------------------
 
-	// Get user input
-	po::options_description options("> CUDAFractal [options]");
-	options.add_options()
-		("help", po::bool_switch(&help), "print help message")
-		("cmaps", po::bool_switch(&cmaps), "prints the list of colormap presets")
-		("mbrot", po::bool_switch(&mbrot), "compute the mandelbrot fractal algorithm")
-		("cr", po::value<float>(&consr)->default_value(-0.4), "real value of c")
-		("ci", po::value<float>(&consi)->default_value(0.6), "imaginary value of c")
-		("width", po::value<unsigned>(&width)->default_value(1920), "image width")
-		("height", po::value<unsigned>(&height)->default_value(1080), "image height")
-		("zoom", po::value<float>(&zoom)->default_value(1.0f), "zoom value")
-		("rotate", po::value<float>(&rotate)->default_value(0.0f), "rotation value")
-		("transx", po::value<float>(&transx)->default_value(0.0f), "x translation")
-		("transy", po::value<float>(&transy)->default_value(0.0f), "y translation")
-		("cmap", po::value<std::string>(&cname)->default_value("nvidia"), "colormap preset")
-		("file", po::value<std::string>(&fname), "output file name");
-	po::variables_map vars;
-	po::store(po::parse_command_line(argc, argv, options), vars);
-	po::notify(vars);
+cuFloatComplex make_cuScaleComplex(float rotate, float zoom) {
+	return make_cuFloatComplex(
+		cos(rotate*F_PI / 180.0f) / zoom,
+		sin(rotate*F_PI / 180.0f) / zoom);
+};
 
-	// List cmaps and exit
-	if (cmaps) {
-		listPresets();
-		return 0;
-	}
-
-	// Print help message and exit if needed
-	if (help) {
-		std::cout << options << std::endl;
-		return 0;
-	}
-
-	// Exit if no filename specified!
-	if (fname.empty()) {
-		std::cout << "ERROR: No filename specified!" << std::endl;
-		return 1;
-	}
-
-	// Get colormap and complex values
-	colormap cmap = fromPreset(cname);
-	cuFloatComplex cons = make_cuFloatComplex(consr, consi);
-	cuFloatComplex scale = make_cuFloatComplex(
-		cos(rotate*F_PI/180.0f)/zoom, 
-		sin(rotate*F_PI/180.0f)/zoom);
-	cuFloatComplex trans = make_cuFloatComplex(transx, transy);
-
+void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComplex trans, colormap cmap, unsigned width, unsigned height, std::string filename, std::string mnemonic) {
 	// Block space
 	// Using 8x8 thread block space because that 
 	// divides evenly into most standard resolutions
 	int blockSize = 8;
 	dim3 blockSpace(blockSize, blockSize);
-		
+
 	// Grid space
 	// Find the largest side of the image rectangle 
 	// and make a square out of that side. Divide 
@@ -197,26 +147,72 @@ int main(int argc, const char* argv[]) {
 	// Call CUDA kernel on the given grid space of blocks
 	// Each block being a block space of threads.
 	// Each thread computes a separate pixel in the Julia/mandelbrot set
-	if (mbrot) {
-		DOING("Running Mandelbrot set kernel");
-		mandelbrotset<<<gridSpace, blockSpace>>>(scale, trans, cmap, width, height, image);
-		cudaDeviceSynchronize(); // Wait for kernel to finish
-		DONE();
-	}
-	else {
-		DOING("Running Julia set kernel");
-		juliaset<<<gridSpace, blockSpace>>>(cons, scale, trans, cmap, width, height, image);
-		cudaDeviceSynchronize(); // Wait for kernel to finish
-		DONE();
-	}
+	DOING("Running kernel for " + mnemonic);
+	if (mbrot) mandelbrotset<<<gridSpace, blockSpace>>>(scale, trans, cmap, width, height, image);
+	else juliaset<<<gridSpace, blockSpace>>>(cons, scale, trans, cmap, width, height, image);
+	cudaDeviceSynchronize(); // Wait for kernel to finish
+	DONE();
 
 	// Save img buffer to png file
 	DOING("Saving png");
-	lodepng_encode32_file(fname.c_str(), image, width, height);
+	lodepng_encode32_file(filename.c_str(), image, width, height);
 	DONE();
-	
+
 	// Free image buffer and exit
 	cudaFree(image);
+};
+
+// -------------------------------- COMMAND PARSE ---------------------------------
+
+/**
+ * The main procedure
+ *
+ * @param argc the number of command line args
+ * @param argv the command line args
+ *
+ * @return status code
+ */
+int main(int argc, const char* argv[]) {
+	// Soon-to-be user-inputted data
+	bool help, cmaps, mbrot;
+	float consr, consi, zoom, rotate, transx, transy;
+	unsigned width, height;
+	std::string cname, filename, mnemonic;
+
+	// Get user input
+	po::options_description options("> CUDAFractal [options]");
+	options.add_options()
+		("help", po::bool_switch(&help), "print help message")
+		("cmaps", po::bool_switch(&cmaps), "prints the list of colormap presets")
+		("mbrot", po::bool_switch(&mbrot), "compute the mandelbrot fractal algorithm")
+		("cr", po::value<float>(&consr)->default_value(-0.4), "real value of c")
+		("ci", po::value<float>(&consi)->default_value(0.6), "imaginary value of c")
+		("width", po::value<unsigned>(&width)->default_value(1920), "image width")
+		("height", po::value<unsigned>(&height)->default_value(1080), "image height")
+		("zoom", po::value<float>(&zoom)->default_value(1.0f), "zoom value")
+		("rotate", po::value<float>(&rotate)->default_value(0.0f), "rotation value")
+		("transx", po::value<float>(&transx)->default_value(0.0f), "x translation")
+		("transy", po::value<float>(&transy)->default_value(0.0f), "y translation")
+		("cmap", po::value<std::string>(&cname)->default_value("nvidia"), "colormap preset")
+		("file", po::value<std::string>(&filename)->default_value("fractal.png"), "output file name")
+		("mnemonic", po::value<std::string>(&mnemonic)->default_value("fractal"), "used to identify job");
+	po::variables_map vars;
+	po::store(po::parse_command_line(argc, argv, options), vars);
+	po::notify(vars);
+
+	if (cmaps) {
+		listPresets();
+	} else if (help) {
+		std::cout << options << std::endl;
+	} else {
+		// Get colormap and complex values
+		colormap cmap = fromPreset(cname);
+		cuFloatComplex cons = make_cuFloatComplex(consr, consi);
+		cuFloatComplex scale = make_cuScaleComplex(rotate, zoom);
+		cuFloatComplex trans = make_cuFloatComplex(transx, transy);
+		generate(mbrot, cons, scale, trans, cmap, width, height, filename, mnemonic);
+	}
+
 	return 0;
 }
 
