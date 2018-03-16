@@ -7,9 +7,11 @@
 #include <cuda_runtime.h>
 
 // Boost
+#include <boost\foreach.hpp>
 #include <boost\optional.hpp>
 #include <boost\program_options.hpp>
 #include <boost\property_tree\ptree.hpp>
+#include <boost\property_tree\xml_parser.hpp>
 
 // Libraries
 #include <exception>
@@ -309,7 +311,7 @@ colormap parseColormap(boost::optional<pt::ptree&> cmap) {
  */
 void doFractalJob(pt::ptree job) {
 	// Get values from xml job tree
-	std::string mnemonic = job.get("<xmlattr>.mnemonic", "xmlfractal");
+	std::string mnemonic = job.get("<xmlattr>.mnemonic", "xml-fractal");
 	bool mbrot = job.get("<xmlattr>.mandelbrot", false);
 	cuFloatComplex cons = make_cuFloatComplex(
 		job.get("constant.<xmlattr>.real", -0.4f), 
@@ -328,6 +330,35 @@ void doFractalJob(pt::ptree job) {
 	// Generate fractal job
 	generate(mbrot, cons, scale, trans, cmap, width, height, filename, mnemonic);
 };
+
+/**
+ * Parses jobs from xml file with given filename
+ *
+ * @param filename the name of xml file
+ */
+void parseXmlFile(std::string filename) {
+	std::ifstream file(filename);
+	try
+	{
+		// Parse jobs from file
+		pt::ptree jobs;
+		read_xml(file, jobs);
+
+		// Do all jobs in fractals element
+		BOOST_FOREACH(pt::ptree::value_type jobentry, jobs.get_child("fractals")) {
+			doFractalJob(jobentry.second);
+		}
+	}
+	catch (const std::exception& e)
+	{
+		// Close file before throwing
+		file.close();
+		throw e;
+	}
+
+	// Close file
+	file.close();
+}
 
 // -------------------------------- COMMAND PARSE ---------------------------------
 
@@ -372,31 +403,7 @@ int main(int argc, const char* argv[]) {
 	if (help) {
 		std::cout << options << std::endl;
 	} else if (!xml.empty()) {
-
-		// Example job
-		pt::ptree exampleJob;
-		exampleJob.add("<xmlattr>.mnemonic", "exampleFractal");
-		exampleJob.add("<xmlattr>.mandelbrot", false);
-		exampleJob.add("constant.<xmlattr>.real", -0.5f);
-		exampleJob.add("constant.<xmlattr>.imag", 0.5f);
-		exampleJob.add("scale.<xmlattr>.rotate", 45.0f);
-		exampleJob.add("scale.<xmlattr>.zoom", 0.5f);
-		exampleJob.add("translate.<xmlattr>.transx", -0.5);
-		exampleJob.add("translate.<xmlattr>.transy", 0.5);
-		exampleJob.add("image.<xmlattr>.width", 800);
-		exampleJob.add("image.<xmlattr>.height", 800);
-		exampleJob.add("image.<xmlattr>.filename", "C:\\Users\\akans\\Desktop\\fractal.png");
-		exampleJob.add("colormap.<xmlattr>.type", "sinusoid");
-		exampleJob.add("colormap.frequency.<xmlattr>.r", 1.4f);
-		exampleJob.add("colormap.frequency.<xmlattr>.g", 1.4f);
-		exampleJob.add("colormap.frequency.<xmlattr>.b", 1.4f);
-		exampleJob.add("colormap.phase.<xmlattr>.r", 2.0f);
-		exampleJob.add("colormap.phase.<xmlattr>.g", 3.0f);
-		exampleJob.add("colormap.phase.<xmlattr>.b", 4.0f);
-
-		// Do job
-		doFractalJob(exampleJob);
-	
+		parseXmlFile(xml);
 	} else if (cmaps) {
 		listPresets();
 	} else {
