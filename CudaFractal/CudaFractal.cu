@@ -5,6 +5,9 @@
 #include "DeviceCode.cuh"
 #include "lodepng.h"
 #include <cuda_runtime.h>
+
+// Boost
+#include <boost\optional.hpp>
 #include <boost\program_options.hpp>
 #include <boost\property_tree\ptree.hpp>
 
@@ -171,8 +174,8 @@ void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComp
 	// Each block being a block space of threads.
 	// Each thread computes a separate pixel in the Julia/mandelbrot set
 	DOING("Running kernel for " + mnemonic);
-	if (mbrot) { mandelbrotset << <gridSpace, blockSpace >> > (scale, trans, cmap, width, height, image); }
-	else { juliaset << <gridSpace, blockSpace >> > (cons, scale, trans, cmap, width, height, image); }
+	if (mbrot) { mandelbrotset<<<gridSpace, blockSpace>>>(scale, trans, cmap, width, height, image); }
+	else { juliaset<<<gridSpace, blockSpace>>>(cons, scale, trans, cmap, width, height, image); }
 	cudaDeviceSynchronize(); // Wait for kernel to finish
 	DONE();
 
@@ -186,6 +189,18 @@ void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComp
 };
 
 // ---------------------------------- XML PARSE -----------------------------------
+
+colormap parseColormap(boost::optional<pt::ptree&> cmap) {
+	if (cmap) {
+		if (boost::optional<std::string> preset = cmap->get_optional<std::string>("<xmlattr>.preset")) {
+			return fromPreset(*preset);
+		} else {
+			return colormap();
+		}
+	} else {
+		return colormap();
+	}
+}
 
 /**
  * Executes job described in property tree
@@ -208,7 +223,7 @@ void doFractalJob(pt::ptree job) {
 	unsigned width = job.get("image.<xmlattr>.width", 1920);
 	unsigned height = job.get("image.<xmlattr>.height", 1080);
 	std::string filename = job.get("image.<xmlattr>.filename", "fractal.png");
-	colormap cmap = fromPreset("lightgarden");
+	colormap cmap = parseColormap(job.get_child_optional("colormap"));
 
 	// Generate fractal job
 	generate(mbrot, cons, scale, trans, cmap, width, height, filename, mnemonic);
@@ -271,6 +286,7 @@ int main(int argc, const char* argv[]) {
 		exampleJob.add("image.<xmlattr>.width", 800);
 		exampleJob.add("image.<xmlattr>.height", 800);
 		exampleJob.add("image.<xmlattr>.filename", "C:\\Users\\akans\\Desktop\\fractal.png");
+		exampleJob.add("colormap.<xmlattr>.preset", "lightgarden");
 
 		// Do job
 		doFractalJob(exampleJob);
