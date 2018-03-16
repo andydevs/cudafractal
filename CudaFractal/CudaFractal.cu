@@ -6,6 +6,7 @@
 #include "lodepng.h"
 #include <cuda_runtime.h>
 #include <boost\program_options.hpp>
+#include <boost\property_tree\ptree.hpp>
 
 // Libraries
 #include <exception>
@@ -32,6 +33,7 @@ clock_t start;
 
 // Boost namespaces
 namespace po = boost::program_options;
+namespace pt = boost::property_tree;
 
 // --------------------------------- PRESET PARSE ---------------------------------
 
@@ -113,12 +115,33 @@ void listPresets() {
 
 // -------------------------------- GENERATOR CODE --------------------------------
 
+/**
+ * Returns scale complex which incorporates rotation and zooming
+ *
+ * @param rotate the rotation value (in degrees)
+ * @param zoom   the zoom value
+ *
+ * @return scale complex
+ */
 cuFloatComplex make_cuScaleComplex(float rotate, float zoom) {
 	return make_cuFloatComplex(
 		cos(rotate*F_PI / 180.0f) / zoom,
 		sin(rotate*F_PI / 180.0f) / zoom);
 };
 
+/**
+ * Generate fractal image
+ *
+ * @param mbrot    true if generating mandelbrot set
+ * @param cons     complex constant
+ * @param scale    scale transformation complex
+ * @param trans    translate transformation complex
+ * @param cmap     colormap to generate with
+ * @param width    width of the image
+ * @param height   height of the image
+ * @param filename name of file to save to
+ * @param mnemonic used to identify generator job
+ */
 void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComplex trans, colormap cmap, unsigned width, unsigned height, std::string filename, std::string mnemonic) {
 	// Block space
 	// Using 8x8 thread block space because that 
@@ -148,8 +171,8 @@ void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComp
 	// Each block being a block space of threads.
 	// Each thread computes a separate pixel in the Julia/mandelbrot set
 	DOING("Running kernel for " + mnemonic);
-	if (mbrot) mandelbrotset<<<gridSpace, blockSpace>>>(scale, trans, cmap, width, height, image);
-	else juliaset<<<gridSpace, blockSpace>>>(cons, scale, trans, cmap, width, height, image);
+	if (mbrot) { mandelbrotset << <gridSpace, blockSpace >> > (scale, trans, cmap, width, height, image); }
+	else { juliaset << <gridSpace, blockSpace >> > (cons, scale, trans, cmap, width, height, image); }
 	cudaDeviceSynchronize(); // Wait for kernel to finish
 	DONE();
 
@@ -160,6 +183,35 @@ void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComp
 
 	// Free image buffer and exit
 	cudaFree(image);
+};
+
+// ---------------------------------- XML PARSE -----------------------------------
+
+/**
+ * Executes job described in property tree
+ *
+ * @param job the job tree
+ */
+void doFractalJob(pt::ptree job) {
+	// Get values from xml job tree
+	std::string mnemonic = job.get("<xmlattr>.mnemonic", "xmlfractal");
+	bool mbrot = job.get("<xmlattr>.mandelbrot", false);
+	cuFloatComplex cons = make_cuFloatComplex(
+		job.get("constant.<xmlattr>.real", -0.4f), 
+		job.get("constant.<xmlattr>.imag", 0.6f));
+	cuFloatComplex scale = make_cuScaleComplex(
+		job.get("scale.<xmlattr>.rotate", 0.0f),
+		job.get("scale.<xmlattr>.zoom", 1.0f));
+	cuFloatComplex trans = make_cuFloatComplex(
+		job.get("translate.<xmlattr>.transx", 0.0f),
+		job.get("translate.<xmlattr>.transy", 0.0f));
+	unsigned width = job.get("image.<xmlattr>.width", 1920);
+	unsigned height = job.get("image.<xmlattr>.height", 1080);
+	std::string filename = job.get("image.<xmlattr>.filename", "fractal.png");
+	colormap cmap = fromPreset("lightgarden");
+
+	// Generate fractal job
+	generate(mbrot, cons, scale, trans, cmap, width, height, filename, mnemonic);
 };
 
 // -------------------------------- COMMAND PARSE ---------------------------------
@@ -177,13 +229,14 @@ int main(int argc, const char* argv[]) {
 	bool help, cmaps, mbrot;
 	float consr, consi, zoom, rotate, transx, transy;
 	unsigned width, height;
-	std::string cname, filename, mnemonic;
+	std::string xml, cname, filename, mnemonic;
 
 	// Get user input
 	po::options_description options("> CUDAFractal [options]");
 	options.add_options()
 		("help", po::bool_switch(&help), "print help message")
 		("cmaps", po::bool_switch(&cmaps), "prints the list of colormap presets")
+		("xml", po::value<std::string>(&xml)->default_value(""), "parse xml file")
 		("mbrot", po::bool_switch(&mbrot), "compute the mandelbrot fractal algorithm")
 		("cr", po::value<float>(&consr)->default_value(-0.4), "real value of c")
 		("ci", po::value<float>(&consi)->default_value(0.6), "imaginary value of c")
@@ -200,16 +253,38 @@ int main(int argc, const char* argv[]) {
 	po::store(po::parse_command_line(argc, argv, options), vars);
 	po::notify(vars);
 
-	if (cmaps) {
-		listPresets();
-	} else if (help) {
+	// Handle different flags
+	if (help) {
 		std::cout << options << std::endl;
+	} else if (!xml.empty()) {
+
+		// Example job
+		pt::ptree exampleJob;
+		exampleJob.add("<xmlattr>.mnemonic", "exampleFractal");
+		exampleJob.add("<xmlattr>.mandelbrot", false);
+		exampleJob.add("constant.<xmlattr>.real", -0.8f);
+		exampleJob.add("constant.<xmlattr>.imag", 0.9f);
+		exampleJob.add("scale.<xmlattr>.rotate", 45.0f);
+		exampleJob.add("scale.<xmlattr>.zoom", 0.5f);
+		exampleJob.add("translate.<xmlattr>.transx", -0.5);
+		exampleJob.add("translate.<xmlattr>.transy", 0.5);
+		exampleJob.add("image.<xmlattr>.width", 800);
+		exampleJob.add("image.<xmlattr>.height", 800);
+		exampleJob.add("image.<xmlattr>.filename", "C:\\Users\\akans\\Desktop\\fractal.png");
+
+		// Do job
+		doFractalJob(exampleJob);
+	
+	} else if (cmaps) {
+		listPresets();
 	} else {
 		// Get colormap and complex values
 		colormap cmap = fromPreset(cname);
 		cuFloatComplex cons = make_cuFloatComplex(consr, consi);
 		cuFloatComplex scale = make_cuScaleComplex(rotate, zoom);
 		cuFloatComplex trans = make_cuFloatComplex(transx, transy);
+
+		// Run generator
 		generate(mbrot, cons, scale, trans, cmap, width, height, filename, mnemonic);
 	}
 
