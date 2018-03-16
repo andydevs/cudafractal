@@ -209,7 +209,19 @@ color parseColor(boost::optional<pt::ptree&> col) {
 	else {
 		return color();
 	}
-}
+};
+
+fColor parseFColor(boost::optional<pt::ptree&> col) {
+	if (col) {
+		return fColor(
+			col->get("<xmlattr>.r", 0.0f),
+			col->get("<xmlattr>.g", 0.0f),
+			col->get("<xmlattr>.b", 0.0f));
+	}
+	else {
+		return fColor();
+	}
+};
 
 colormap parseColormap(boost::optional<pt::ptree&> cmap) {
 	if (cmap) {
@@ -221,6 +233,12 @@ colormap parseColormap(boost::optional<pt::ptree&> cmap) {
 				return colormap::gradient(
 					parseColor(cmap->get_child_optional("from")),
 					parseColor(cmap->get_child_optional("to")));
+			}
+			else if (type == "sinusoid") {
+				return colormap::sinusoidWithAlpha(
+					parseFColor(cmap->get_child_optional("frequency")),
+					parseFColor(cmap->get_child_optional("phase")),
+					cmap->get("<xmlattr>.alpha", 0xff));
 			}
 			else {
 				return colormap();
@@ -315,11 +333,13 @@ int main(int argc, const char* argv[]) {
 		exampleJob.add("image.<xmlattr>.width", 800);
 		exampleJob.add("image.<xmlattr>.height", 800);
 		exampleJob.add("image.<xmlattr>.filename", "C:\\Users\\akans\\Desktop\\fractal.png");
-		exampleJob.add("colormap.<xmlattr>.type", "gradient");
-		exampleJob.add("colormap.from.<xmlattr>.type", "hex");
-		exampleJob.add("colormap.from.<xmlattr>.hex", "0xffffff");
-		exampleJob.add("colormap.to.<xmlattr>.type", "hex");
-		exampleJob.add("colormap.to.<xmlattr>.hex", "0x000000");
+		exampleJob.add("colormap.<xmlattr>.type", "sinusoid");
+		exampleJob.add("colormap.frequency.<xmlattr>.r", 1.4f);
+		exampleJob.add("colormap.frequency.<xmlattr>.g", 1.4f);
+		exampleJob.add("colormap.frequency.<xmlattr>.b", 1.4f);
+		exampleJob.add("colormap.phase.<xmlattr>.r", 2.0f);
+		exampleJob.add("colormap.phase.<xmlattr>.g", 3.0f);
+		exampleJob.add("colormap.phase.<xmlattr>.b", 4.0f);
 
 		// Do job
 		doFractalJob(exampleJob);
