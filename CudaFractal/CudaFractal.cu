@@ -189,13 +189,42 @@ void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComp
 };
 
 // ---------------------------------- XML PARSE -----------------------------------
+unsigned parseHex(std::string str) {
+	unsigned val;
+	std::stringstream stream(str);
+	stream >> std::hex >> val;
+	return val;
+};
+
+color parseColor(boost::optional<pt::ptree&> col) {
+	if (col) {
+		std::string type = col->get("<xmlattr>.type", "mono");
+		if (type == "hex") {
+			return color::hex(parseHex(col->get("<xmlattr>.hex", "0x0000000")));
+		}
+		else {
+			return color();
+		}
+	}
+	else {
+		return color();
+	}
+}
 
 colormap parseColormap(boost::optional<pt::ptree&> cmap) {
 	if (cmap) {
 		if (boost::optional<std::string> preset = cmap->get_optional<std::string>("<xmlattr>.preset")) {
 			return fromPreset(*preset);
 		} else {
-			return colormap();
+			std::string type = cmap->get("<xmlattr>.type", "mono"); // It's a real thing, just drink it.
+			if (type == "gradient") {
+				return colormap::gradient(
+					parseColor(cmap->get_child_optional("from")),
+					parseColor(cmap->get_child_optional("to")));
+			}
+			else {
+				return colormap();
+			}
 		}
 	} else {
 		return colormap();
@@ -277,8 +306,8 @@ int main(int argc, const char* argv[]) {
 		pt::ptree exampleJob;
 		exampleJob.add("<xmlattr>.mnemonic", "exampleFractal");
 		exampleJob.add("<xmlattr>.mandelbrot", false);
-		exampleJob.add("constant.<xmlattr>.real", -0.8f);
-		exampleJob.add("constant.<xmlattr>.imag", 0.9f);
+		exampleJob.add("constant.<xmlattr>.real", -0.5f);
+		exampleJob.add("constant.<xmlattr>.imag", 0.5f);
 		exampleJob.add("scale.<xmlattr>.rotate", 45.0f);
 		exampleJob.add("scale.<xmlattr>.zoom", 0.5f);
 		exampleJob.add("translate.<xmlattr>.transx", -0.5);
@@ -286,7 +315,11 @@ int main(int argc, const char* argv[]) {
 		exampleJob.add("image.<xmlattr>.width", 800);
 		exampleJob.add("image.<xmlattr>.height", 800);
 		exampleJob.add("image.<xmlattr>.filename", "C:\\Users\\akans\\Desktop\\fractal.png");
-		exampleJob.add("colormap.<xmlattr>.preset", "lightgarden");
+		exampleJob.add("colormap.<xmlattr>.type", "gradient");
+		exampleJob.add("colormap.from.<xmlattr>.type", "hex");
+		exampleJob.add("colormap.from.<xmlattr>.hex", "0xffffff");
+		exampleJob.add("colormap.to.<xmlattr>.type", "hex");
+		exampleJob.add("colormap.to.<xmlattr>.hex", "0x000000");
 
 		// Do job
 		doFractalJob(exampleJob);
