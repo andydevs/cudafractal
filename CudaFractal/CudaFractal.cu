@@ -189,6 +189,13 @@ void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComp
 };
 
 // ---------------------------------- XML PARSE -----------------------------------
+/**
+ * Parse hex value from string
+ *
+ * @param str the hex string
+ *
+ * @return hex value from string
+ */
 unsigned parseHex(std::string str) {
 	unsigned val;
 	std::stringstream stream(str);
@@ -196,21 +203,54 @@ unsigned parseHex(std::string str) {
 	return val;
 };
 
+/**
+ * Parse color from property tree
+ *
+ * @param col (optional) the property tree
+ * 
+ * @return color from property tree
+ */
 color parseColor(boost::optional<pt::ptree&> col) {
 	if (col) {
+
+		// Parse different types of colors
 		std::string type = col->get("<xmlattr>.type", "mono");
 		if (type == "hex") {
 			return color::hex(parseHex(col->get("<xmlattr>.hex", "0x0000000")));
 		}
+		else if (type == "hexa") {
+			return color::hexa(parseHex(col->get("<xmlattr>.hexa", "0x0000000")));
+		}
+		else if (type == "rgb") {
+			return color(
+				col->get("<xmlattr>.r", 0x00),
+				col->get("<xmlattr>.g", 0x00),
+				col->get("<xmlattr>.b", 0x00));
+		}
+		else if (type == "rgba") {
+			return color(
+				col->get("<xmlattr>.r", 0x00),
+				col->get("<xmlattr>.g", 0x00),
+				col->get("<xmlattr>.b", 0x00),
+				col->get("<xmlattr>.a", 0x00));
+		}
 		else {
 			return color();
 		}
+
 	}
 	else {
 		return color();
 	}
 };
 
+/**
+ * Parse float color from property tree
+ *
+ * @param col (optional) the property tree
+ *
+ * @return float color from property tree
+ */
 fColor parseFColor(boost::optional<pt::ptree&> col) {
 	if (col) {
 		return fColor(
@@ -223,11 +263,23 @@ fColor parseFColor(boost::optional<pt::ptree&> col) {
 	}
 };
 
+/**
+ * Parse colormap from property tree
+ *
+ * @param cmap (optional) the property tree
+ *
+ * @return colormap from property tree
+ */
 colormap parseColormap(boost::optional<pt::ptree&> cmap) {
 	if (cmap) {
 		if (boost::optional<std::string> preset = cmap->get_optional<std::string>("<xmlattr>.preset")) {
+		
+			// Parse preset
 			return fromPreset(*preset);
+		
 		} else {
+			
+			// Parse types of colormaps
 			std::string type = cmap->get("<xmlattr>.type", "mono"); // It's a real thing, just drink it.
 			if (type == "gradient") {
 				return colormap::gradient(
@@ -243,6 +295,7 @@ colormap parseColormap(boost::optional<pt::ptree&> cmap) {
 			else {
 				return colormap();
 			}
+		
 		}
 	} else {
 		return colormap();
