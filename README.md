@@ -55,7 +55,11 @@ For example, consider a constant of `0` for now, so the iterative function becom
 
 Adding a non-zero constant `c` will complicate the set.
 
-![Julia Set (f(z) = z^2 - 0.61)](complex.png)
+![Julia Set (f(z) = z^2 - 0.4 + 0.6)](complex.png)
+
+Changing which iterations corespond to which colors produces the beautiful color patterns
+
+![Julia Set (f(z) = z^2 - 0.4 + 0.6)](clorful.png)
 
 ### The Mandelbrot Set
 
