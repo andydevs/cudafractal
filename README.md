@@ -51,13 +51,13 @@ For example, consider a constant of `0` for now, so the iterative function becom
 
 Julia Sets can be approximated by using a computer. Each image is a complex grid ranging from -2 to 2, and from -2i to 2i (the width bounds are extended according to the image aspect ratio). Each pixel represents an approximate complex number in the grid. The computer goes through these pixels, and performs at most 256 iterations of the function `z[a+1] = z[a]^2 + c` on the complex number, and maps the number of iterations it took for the set to reach infinity (at all) to a color (according to a set color map), creating the complex patterns.
 
-![Julia Set (f(z) = z^2 + c, c = -0.61)](ink.jpg)
+![Julia Set (f(z) = z^2 + c, c = -0.61)](ink.png)
 
 ### The Mandelbrot Set
 
 Running the algorithm with multiple different numbers, one may determine that some values will yield juliaset with many infinite values and a monochromatic image, some will yield large blob-like patterns, and some will create intricate crystal-like structures. The Mandelbrot set developed by Benoit Mandelbrot, is a sort of roadmap of these various sets. This is generated with the same function, but, instead of assigning each pixel value to the initial value of the set, we set it to the value of the constant c and set the initial value of the set to z to 0. Running this process on each pixel will generate an image like this.
 
-![Mandelbrot Set (f(x) = z^2 + c)](mandelbrot.jpg)
+![Mandelbrot Set (f(x) = z^2 + c)](mandelbrot.png)
 
 The black regions on the Mandelbrot Set are the c constants that will generate blob shapes (connected julia sets or fatou sets), while the white areas are those that will create barely visible dust-like shapes. The sweet-spot is around the edge of the mandelbrot set, as these complex values will generate complex crystal shapes.
 
