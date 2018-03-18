@@ -9,15 +9,21 @@
     <colormap preset="flower"/>
   </fractal>
 
+  <fractal mnemonic="ink-fractal">
+    <constant real="-0.61" imag="0.0" />
+    <scale rotate="0.0" zoom="0.75" />
+    <translate transx="0.0" transy="0.0" />
+    <image width="1920" height="1080"
+           filename="..\\ink.png" />
+    <colormap preset="ink"/>
+  </fractal>
+
   <fractal mnemonic="mandelbrot-fractal" mandelbrot="true">
     <constant real="-0.4" imag="0.6" />
     <scale rotate="0.0" zoom="0.75" />
     <translate transx="0.0" transy="0.0" />
     <image width="1920" height="1080"
            filename="..\\mandelbrot.png" />
-    <colormap type="gradient">
-      <from type="hex" hex="0x999999"/>
-      <to type="hex" hex="0xffff00"/>
-    </colormap>
+    <colormap preset="ink"/>
   </fractal>
 </fractals>
