@@ -24,10 +24,22 @@
 #include <ctime>
 #include <map>
 
-// Start time
+// Global Flags
+bool verbose;
+
+// Start times
+clock_t big_start;
 clock_t start;
 
 // Macros
+#define BIG_DOING(task) \
+	std::cout << task << std::endl \
+	<< "===============================================================" << std::endl; \
+	big_start = clock();
+#define BIG_DONE() \
+	std::cout \
+		<< "===============================================================" << std::endl \
+		<< "Done! " << (float)(clock() - big_start) / CLOCKS_PER_SEC << "s" << std::endl;
 #define DOING(task) \
 	std::cout << task << "..."; \
 	start = clock();
@@ -35,6 +47,10 @@ clock_t start;
 	std::cout << "Done! " \
 		<< (float)(clock() - start) / CLOCKS_PER_SEC << "s" \
 		<< std::endl;
+#define VERBOSE(message) \
+	if (verbose) std::cout << message << std::endl;
+#define COMPLEX_STRING(complex) \
+	std::to_string(complex.x) + " + " + std::to_string(complex.y) + "i"
 
 // Boost namespaces
 namespace po = boost::program_options;
@@ -53,6 +69,7 @@ void initPresets() {
 	// Initialize if uninitialized
 	if (uninitialized) {
 		// Populate presets map
+		VERBOSE("Initialize presets map");
 		presets["noir"] = colormap::gradient(
 			color::hex(0x000000),
 			color::hex(0xffffff));
@@ -327,6 +344,18 @@ void doFractalJob(pt::ptree job) {
 	std::string filename = job.get("image.<xmlattr>.filename", "fractal.png");
 	colormap cmap = parseColormap(job.get_child_optional("colormap"));
 
+	// Print job values in verbose
+	VERBOSE("---------------JOB INFO---------------");
+	VERBOSE("Mnemonic: " + mnemonic);
+	VERBOSE("Mandelbrot: " + std::to_string(mbrot));
+	VERBOSE("Constant: " + COMPLEX_STRING(cons));
+	VERBOSE("Scale: " + COMPLEX_STRING(scale));
+	VERBOSE("Translate: " + COMPLEX_STRING(trans));
+	VERBOSE("Width: " + std::to_string(width));
+	VERBOSE("Height: " + std::to_string(height));
+	VERBOSE("File: " + filename);
+	VERBOSE("--------------------------------------");
+
 	// Generate fractal job
 	generate(mbrot, cons, scale, trans, cmap, width, height, filename, mnemonic);
 };
@@ -337,27 +366,50 @@ void doFractalJob(pt::ptree job) {
  * @param filename the name of xml file
  */
 void parseXmlFile(std::string filename) {
+	VERBOSE("Parsing " + filename);
 	std::ifstream file(filename);
-	try
+	if (file.is_open())
 	{
-		// Parse jobs from file
-		pt::ptree jobs;
-		read_xml(file, jobs);
+		VERBOSE("File is found!");
+		try
+		{
+			// Parse jobs from file
+			pt::ptree jobs;
+			read_xml(file, jobs);
+			VERBOSE("Valid XML");
 
-		// Do all jobs in fractals element
-		BOOST_FOREACH(pt::ptree::value_type jobentry, jobs.get_child("fractals")) {
-			doFractalJob(jobentry.second);
+			// Get joblist
+			pt::ptree joblist = jobs.get_child("fractals");
+			VERBOSE("Number of jobs: " + std::to_string(joblist.size()));
+
+			// Do all jobs in fractals element
+			BIG_DOING("Doing jobs...");
+			BOOST_FOREACH(pt::ptree::value_type jobentry, joblist) {
+				doFractalJob(jobentry.second);
+			}
+			BIG_DONE();
 		}
-	}
-	catch (const std::exception& e)
-	{
-		// Close file before throwing
-		file.close();
-		throw e;
-	}
+		catch (const pt::xml_parser_error& e) 
+		{
+			std::cerr << "ERROR Parsing xml file!: " << e.what() << std::endl;
+			file.close();
+			return;
+		}
+		catch (const std::exception& e)
+		{
+			// Close file before throwing
+			std::cerr << "ERROR: " << e.what() << std::endl;
+			file.close();
+			return;
+		}
 
-	// Close file
-	file.close();
+		// Close file
+		file.close();
+	}
+	else
+	{
+		VERBOSE("File doesn't exist!");
+	}
 }
 
 // -------------------------------- COMMAND PARSE ---------------------------------
@@ -394,7 +446,8 @@ int main(int argc, const char* argv[]) {
 		("transy", po::value<float>(&transy)->default_value(0.0f), "y translation")
 		("cmap", po::value<std::string>(&cname)->default_value("nvidia"), "colormap preset")
 		("file", po::value<std::string>(&filename)->default_value("fractal.png"), "output file name")
-		("mnemonic", po::value<std::string>(&mnemonic)->default_value("fractal"), "used to identify job");
+		("mnemonic", po::value<std::string>(&mnemonic)->default_value("fractal"), "used to identify job")
+		("verbose", po::bool_switch(&verbose), "print verbose messages");
 	po::variables_map vars;
 	po::store(po::parse_command_line(argc, argv, options), vars);
 	po::notify(vars);
