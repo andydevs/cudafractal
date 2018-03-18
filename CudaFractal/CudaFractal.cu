@@ -452,23 +452,17 @@ int main(int argc, const char* argv[]) {
 	po::store(po::parse_command_line(argc, argv, options), vars);
 	po::notify(vars);
 
-	// Handle different flags
-	if (help) {
-		std::cout << options << std::endl;
-	} else if (!xml.empty()) {
-		parseXmlFile(xml);
-	} else if (cmaps) {
-		listPresets();
-	} else {
-		// Get colormap and complex values
-		colormap cmap = fromPreset(cname);
-		cuFloatComplex cons = make_cuFloatComplex(consr, consi);
-		cuFloatComplex scale = make_cuScaleComplex(rotate, zoom);
-		cuFloatComplex trans = make_cuFloatComplex(transx, transy);
-
-		// Run generator
-		generate(mbrot, cons, scale, trans, cmap, width, height, filename, mnemonic);
-	}
+	// Handle different command options
+	if (help) std::cout << options << std::endl;
+	else if (!xml.empty()) parseXmlFile(xml);
+	else if (cmaps) listPresets();
+	else generate(mbrot, 
+			make_cuFloatComplex(consr, consi), 
+			make_cuScaleComplex(rotate, zoom), 
+			make_cuFloatComplex(transx, transy), 
+			fromPreset(cname), 
+			width, height, filename, 
+			mnemonic);
 
 	return 0;
 }
