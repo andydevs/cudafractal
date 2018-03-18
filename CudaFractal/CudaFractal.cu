@@ -97,7 +97,7 @@ void initPresets() {
 		presets["sarree"] = colormap::sinusoid(
 			fColor(1.4, 1.4, 1.4),
 			fColor(2.0, 3.0, 4.0));
-		presets["sarree2"] = colormap::sinusoid(
+		presets["saffron"] = colormap::sinusoid(
 			fColor(1.00, 2.00, 2.00),
 			fColor(F_P1, F_P1, F_P1));
 		presets["lightgarden"] = colormap::sinusoid(
