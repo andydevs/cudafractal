@@ -59,7 +59,7 @@ Adding a non-zero constant `c` will complicate the set.
 
 Changing which iterations corespond to which colors produces the beautiful color patterns
 
-![Julia Set (f(z) = z^2 - 0.4 + 0.6)](clorful.png)
+![Julia Set (f(z) = z^2 - 0.4 + 0.6)](colorful.png)
 
 ### The Mandelbrot Set
 
