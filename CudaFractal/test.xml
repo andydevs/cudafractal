@@ -1,26 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <fractals>
-  <fractal mnemonic="example-fractal-1">
-    <constant real="-0.5" imag="0.5" />
-    <scale rotate="45.0" zoom="0.5" />
-    <translate transx="-0.5" transy="0.5" />
-    <image width="800" height="800" 
-           filename="C:\\Users\\akans\\Desktop\\fractal.png" />
-    <colormap type="sinusoid">
-      <frequency r="1.4" g="1.4" b="1.4"/>
-      <phase r="2.0" g="3.0" b="4.0"/>
-    </colormap>
+  <fractal mnemonic="flower-fractal">
+    <constant real="-0.4" imag="0.6" />
+    <scale rotate="0.0" zoom="0.75" />
+    <translate transx="0.0" transy="0.0" />
+    <image width="1920" height="1080" 
+           filename="..\\flower.png" />
+    <colormap preset="flower"/>
   </fractal>
 
-  <fractal mnemonic="example-fractal-2">
+  <fractal mnemonic="mandelbrot-fractal" mandelbrot="true">
     <constant real="-0.4" imag="0.6" />
-    <scale rotate="135.0" zoom="0.5" />
-    <translate transx="0.5" transy="0.5" />
-    <image width="800" height="800"
-           filename="C:\\Users\\akans\\Desktop\\fractal2.png" />
-    <colormap type="sinusoid">
-      <frequency r="1.4" g="1.4" b="1.4"/>
-      <phase r="-2.0" g="-3.0" b="-4.0"/>
+    <scale rotate="0.0" zoom="0.75" />
+    <translate transx="0.0" transy="0.0" />
+    <image width="1920" height="1080"
+           filename="..\\mandelbrot.png" />
+    <colormap type="gradient">
+      <from type="hex" hex="0x999999"/>
+      <to type="hex" hex="0xffff00"/>
     </colormap>
   </fractal>
 </fractals>
