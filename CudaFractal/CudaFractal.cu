@@ -375,7 +375,7 @@ void parseXmlFile(std::string filename) {
 		{
 			// Parse jobs from file
 			pt::ptree jobs;
-			read_xml(file, jobs);
+			read_xml(file, jobs, pt::xml_parser::no_comments);
 			VERBOSE("Valid XML");
 
 			// Get joblist
