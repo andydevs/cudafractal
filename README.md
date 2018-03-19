@@ -75,7 +75,7 @@ The black regions on the Mandelbrot Set are the c constants that will generate b
 
 Requirements: Windows 10 (or later) 64-bit, Nvidia GPU
 
-Download InstallCudaFractal.msi from the release page and run it. This will install the program into C:\Program Files\Andydevs\CudaFractal.
+Download InstallCudaFractal.msi from the [release page](https://github.com/andydevs/cuda-fractal/releases/latest) and run it. This will install the program into C:\Program Files\Andydevs\CudaFractal.
 
 #### Optional: Add C:\Program Files\Andydevs\CudaFractal To Your Path
 
