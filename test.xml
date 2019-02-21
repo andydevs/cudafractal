@@ -5,7 +5,7 @@
     <scale rotate="0.0" zoom="0.75" />
     <translate transx="0.0" transy="0.0" />
     <image width="1920" height="1080" 
-           filename="..\\flower.png" />
+           filename="flower.png" />
     <colormap preset="flower"/>
   </fractal>
 
@@ -14,7 +14,7 @@
     <scale rotate="0.0" zoom="0.75" />
     <translate transx="0.0" transy="0.0" />
     <image width="1920" height="1080"
-           filename="..\\simple.png" />
+           filename="simple.png" />
     <colormap preset="ink"/>
   </fractal>
 
@@ -23,7 +23,7 @@
     <scale rotate="0.0" zoom="0.75" />
     <translate transx="0.0" transy="0.0" />
     <image width="1920" height="1080"
-           filename="..\\complex.png" />
+           filename="complex.png" />
     <colormap preset="ink"/>
   </fractal>
 
@@ -32,7 +32,7 @@
     <scale rotate="0.0" zoom="0.75" />
     <translate transx="0.0" transy="0.0" />
     <image width="1920" height="1080"
-           filename="..\\colorful.png" />
+           filename="colorful.png" />
     <colormap preset="saffron"/>
   </fractal>
 
@@ -41,7 +41,7 @@
     <scale rotate="0.0" zoom="0.75" />
     <translate transx="0.0" transy="0.0" />
     <image width="1920" height="1080"
-           filename="..\\mandelbrot.png" />
+           filename="mandelbrot.png" />
     <colormap preset="ink"/>
   </fractal>
 </fractals>
