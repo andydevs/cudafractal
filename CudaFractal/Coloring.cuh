@@ -1,7 +1,8 @@
 #pragma once
 
 // Includes
-#include "Super.cuh"
+#include "Super.h"
+#include <cmath>
 #include <cuda_runtime.h>
 
 // Approx pi and subsequent measurements

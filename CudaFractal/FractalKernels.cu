@@ -1,7 +1,8 @@
+#include "Super.h"
 #include "FractalKernels.cuh"
-#include "Super.cuh"
 #include "DeviceCode.cuh"
 #include "Coloring.cuh"
+#include <cuComplex.h>
 #include <device_launch_parameters.h>
 #include <cuda_runtime.h>
 

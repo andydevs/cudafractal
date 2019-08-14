@@ -1,6 +1,6 @@
-#include "Presets.cuh"
-#include "Super.cuh"
 #include "Coloring.cuh"
+#include "Super.h"
+#include "Presets.h"
  
 #include <iostream>
 #include <map>

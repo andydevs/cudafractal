@@ -1,9 +1,9 @@
 // Inlcudes
-#include "XMLParse.cuh"
-#include "Super.cuh"
 #include "Coloring.cuh"
-#include "Generate.cuh"
-#include "Presets.cuh"
+#include "Super.h"
+#include "Presets.h"
+#include "XMLParse.h"
+#include "Generate.h"
 
 // CUDA
 #include <cuda_runtime.h>

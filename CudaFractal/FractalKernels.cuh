@@ -1,7 +1,7 @@
 #pragma once
 
 // Includes
-#include "Super.cuh"
+#include "Super.h"
 #include "Coloring.cuh"
 #include <cuComplex.h>
 

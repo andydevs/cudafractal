@@ -111,25 +111,25 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <CudaCompile Include="CudaFractal.cu" />
     <CudaCompile Include="DeviceCode.cu" />
     <CudaCompile Include="FractalKernels.cu" />
-    <CudaCompile Include="Generate.cu" />
-    <CudaCompile Include="Presets.cu" />
-    <CudaCompile Include="XMLParse.cu" />
+    <CudaCompile Include="Presets.cpp" />
+    <CudaCompile Include="XMLParse.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Generate.cpp" />
     <ClCompile Include="lodepng.cpp" />
+    <ClCompile Include="Main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coloring.cuh" />
     <ClInclude Include="DeviceCode.cuh" />
     <ClInclude Include="FractalKernels.cuh" />
-    <ClInclude Include="Generate.cuh" />
+    <ClInclude Include="Generate.h" />
     <ClInclude Include="lodepng.h" />
-    <ClInclude Include="Presets.cuh" />
-    <ClInclude Include="Super.cuh" />
-    <ClInclude Include="XMLParse.cuh" />
+    <ClInclude Include="Presets.h" />
+    <ClInclude Include="Super.h" />
+    <ClInclude Include="XMLParse.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

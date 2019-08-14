@@ -1,5 +1,5 @@
 // Includes
-#include "Generate.cuh"
+#include "Generate.h"
 #include "FractalKernels.cuh"
 #include "lodepng.h"
 
@@ -13,27 +13,27 @@
 #include <ctime>
 
 /**
- * Generate fractal image
- *
- * @param mbrot    true if generating mandelbrot set
- * @param cons     complex constant
- * @param scale    scale transformation complex
- * @param trans    translate transformation complex
- * @param cmap     colormap to generate with
- * @param width    width of the image
- * @param height   height of the image
- * @param filename name of file to save to
- * @param mnemonic used to identify generator job
- */
+* Generate fractal image
+*
+* @param mbrot    true if generating mandelbrot set
+* @param cons     complex constant
+* @param scale    scale transformation complex
+* @param trans    translate transformation complex
+* @param cmap     colormap to generate with
+* @param width    width of the image
+* @param height   height of the image
+* @param filename name of file to save to
+* @param mnemonic used to identify generator job
+*/
 void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComplex trans, colormap cmap, unsigned width, unsigned height, std::string filename, std::string mnemonic) {
 	DEFINE_TIMES
 
-	// NOTE: 
-	//	Investigate why grid spaces or block spaces 
-	//	do not work in this case when made rectangular...
+		// NOTE: 
+		//	Investigate why grid spaces or block spaces 
+		//	do not work in this case when made rectangular...
 
-	// Create a cuda-managed image buffer and save location at image
-	unsigned char* image;
+		// Create a cuda-managed image buffer and save location at image
+		unsigned char* image;
 	unsigned length = width*height*IMAGE_NUM_CHANNELS;
 	cudaMallocManaged(&image, sizeof(unsigned char)*length);
 

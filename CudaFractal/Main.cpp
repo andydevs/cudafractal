@@ -1,31 +1,18 @@
-#ifndef __FRACTAL_HOST_CODE__
-#define __FRACTAL_HOST_CODE__
-
 // Includes
-#include "Generate.cuh"
-#include "Presets.cuh"
-#include "XMLParse.cuh"
-#include "lodepng.h"
+#include "Presets.h"
+#include "XMLParse.h"
+#include "Generate.h"
 #include <cuda_runtime.h>
 
 // Boost
-#include <boost\foreach.hpp>
 #include <boost\optional.hpp>
 #include <boost\program_options.hpp>
-#include <boost\property_tree\ptree.hpp>
-#include <boost\property_tree\xml_parser.hpp>
 
 // Libraries
-#include <exception>
 #include <iostream>
-#include <fstream>
-#include <sstream>
 #include <string>
-#include <cstdio>
-#include <cmath>
-#include <ctime>
-#include <map>
 
+// Namespaces
 namespace po = boost::program_options;
 
 /**
@@ -69,15 +56,13 @@ int main(int argc, const char* argv[]) {
 	if (help) std::cout << options << std::endl;
 	else if (!xml.empty()) parseXmlFile(xml);
 	else if (cmaps) listPresets();
-	else generate(mbrot, 
-			make_cuFloatComplex(consr, consi), 
-			make_cuScaleComplex(rotate, zoom), 
-			make_cuFloatComplex(transx, transy), 
-			fromPreset(cname), 
-			width, height, filename, 
-			mnemonic);
+	else generate(mbrot,
+		make_cuFloatComplex(consr, consi),
+		make_cuScaleComplex(rotate, zoom),
+		make_cuFloatComplex(transx, transy),
+		fromPreset(cname),
+		width, height, filename,
+		mnemonic);
 
 	return 0;
 }
-
-#endif // !__FRACTAL_HOST_CODE__

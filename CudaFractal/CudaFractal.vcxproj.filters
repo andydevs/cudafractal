@@ -1,22 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CudaCompile Include="CudaFractal.cu">
-      <Filter>Source Files</Filter>
-    </CudaCompile>
     <CudaCompile Include="DeviceCode.cu">
       <Filter>Source Files</Filter>
     </CudaCompile>
-    <CudaCompile Include="XMLParse.cu">
-      <Filter>Source Files</Filter>
-    </CudaCompile>
-    <CudaCompile Include="Presets.cu">
-      <Filter>Source Files</Filter>
-    </CudaCompile>
-    <CudaCompile Include="Generate.cu">
-      <Filter>Source Files</Filter>
-    </CudaCompile>
     <CudaCompile Include="FractalKernels.cu">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
+    <CudaCompile Include="XMLParse.cpp">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
+    <CudaCompile Include="Presets.cpp">
       <Filter>Source Files</Filter>
     </CudaCompile>
   </ItemGroup>
@@ -27,22 +21,22 @@
     <ClInclude Include="DeviceCode.cuh">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Super.cuh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="lodepng.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Generate.cuh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="XMLParse.cuh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Presets.cuh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="FractalKernels.cuh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Generate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLParse.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Presets.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Super.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -56,6 +50,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lodepng.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Generate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
