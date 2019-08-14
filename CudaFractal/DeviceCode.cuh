@@ -1,5 +1,4 @@
-#ifndef __FRACTAL_DEVICE_CODE__
-#define __FRACTAL_DEVICE_CODE__
+#pragma once
 
 // Includes
 #include "Coloring.cuh"
@@ -38,5 +37,3 @@ void juliaset(cuFloatComplex c, cuFloatComplex s, cuFloatComplex t, colormap cma
  */
 __global__
 void mandelbrotset(cuFloatComplex s, cuFloatComplex t, colormap cmap, unsigned w, unsigned h, unsigned char* img);
-
-#endif // !__FRACTAL_DEVICE_CODE__

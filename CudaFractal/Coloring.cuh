@@ -1,5 +1,4 @@
-#ifndef __FRACTAL_COLORING__
-#define __FRACTAL_COLORING__
+#pragma once
 
 // Includes
 #include "Super.cuh"
@@ -343,5 +342,3 @@ void setPixel(byte* img, unsigned w, unsigned h, unsigned x, unsigned y, color c
 	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_BLUE_CHANNEL]  = col.b; // Blue
 	img[(y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_ALPHA_CHANNEL] = col.a; // Alpha
 }
-
-#endif

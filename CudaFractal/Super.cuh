@@ -1,5 +1,4 @@
-#ifndef __FRACTAL_SUPER__
-#define __FRACTAL_SUPER__
+#pragma once
 
 // PNG Image format
 #define IMAGE_NUM_CHANNELS 4
@@ -13,5 +12,3 @@
 
 // Define byte type
 typedef unsigned char byte;
-
-#endif // !__FRACTAL_SUPER__
