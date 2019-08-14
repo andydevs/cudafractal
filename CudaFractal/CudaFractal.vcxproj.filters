@@ -21,6 +21,9 @@
     <ClInclude Include="lodepng.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Generate.cuh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
