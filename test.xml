@@ -9,13 +9,13 @@
     <colormap preset="flower"/>
   </fractal>
 
-  <fractal mnemonic="simple-fractal">
-    <constant real="0.0" imag="0.0" />
+  <fractal mnemonic="colorful-fractal">
+    <constant real="-0.4" imag="0.6" />
     <scale rotate="0.0" zoom="0.75" />
     <translate transx="0.0" transy="0.0" />
     <image width="1920" height="1080"
-           filename="simple.png" />
-    <colormap preset="ink"/>
+           filename="colorful.png" />
+    <colormap preset="saffron"/>
   </fractal>
 
   <fractal mnemonic="complex-fractal">
@@ -27,15 +27,6 @@
     <colormap preset="ink"/>
   </fractal>
 
-  <fractal mnemonic="colorful-fractal">
-    <constant real="-0.4" imag="0.6" />
-    <scale rotate="0.0" zoom="0.75" />
-    <translate transx="0.0" transy="0.0" />
-    <image width="1920" height="1080"
-           filename="colorful.png" />
-    <colormap preset="saffron"/>
-  </fractal>
-
   <fractal mnemonic="mandelbrot-fractal" mandelbrot="true">
     <constant real="-0.4" imag="0.6" />
     <scale rotate="0.0" zoom="0.75" />
@@ -43,5 +34,14 @@
     <image width="1920" height="1080"
            filename="mandelbrot.png" />
     <colormap preset="ink"/>
+  </fractal>
+
+  <fractal mnemonic="simple-fractal">
+    <constant real="0.0" imag="0.0" />
+    <scale rotate="0.0" zoom="0.75" />
+    <translate transx="0.0" transy="0.0" />
+    <image width="1920" height="1080"
+           filename="simple.png" />
+    <colormap preset="noir"/>
   </fractal>
 </fractals>
