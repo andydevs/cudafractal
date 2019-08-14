@@ -24,6 +24,12 @@
     <ClInclude Include="Generate.cuh">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="XMLParse.cuh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Presets.cuh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">

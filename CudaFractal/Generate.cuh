@@ -12,6 +12,20 @@
 #include <ctime>
 
 /**
+ * Returns scale complex which incorporates rotation and zooming
+ *
+ * @param rotate the rotation value (in degrees)
+ * @param zoom   the zoom value
+ *
+ * @return scale complex
+ */
+cuFloatComplex make_cuScaleComplex(float rotate, float zoom) {
+	return make_cuFloatComplex(
+		cos(rotate*F_PI / 180.0f) / zoom,
+		sin(rotate*F_PI / 180.0f) / zoom);
+};
+
+/**
  * Generate fractal image
  *
  * @param mbrot    true if generating mandelbrot set

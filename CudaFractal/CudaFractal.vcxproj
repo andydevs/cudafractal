@@ -120,7 +120,9 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
     <ClInclude Include="DeviceCode.cuh" />
     <ClInclude Include="Generate.cuh" />
     <ClInclude Include="lodepng.h" />
+    <ClInclude Include="Presets.cuh" />
     <ClInclude Include="Super.cuh" />
+    <ClInclude Include="XMLParse.cuh" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

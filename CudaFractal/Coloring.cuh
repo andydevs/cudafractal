@@ -2,6 +2,7 @@
 
 // Includes
 #include "Super.cuh"
+#include <cuda_runtime.h>
 
 // Approx pi and subsequent measurements
 #define F_PI 3.1415926535897932f

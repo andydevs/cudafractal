@@ -1,5 +1,8 @@
 #pragma once
 
+// Verbose flag
+#define verbose 1
+
 // PNG Image format
 #define IMAGE_NUM_CHANNELS 4
 #define IMAGE_RED_CHANNEL 0
