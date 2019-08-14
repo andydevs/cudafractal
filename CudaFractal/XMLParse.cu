@@ -53,7 +53,6 @@ unsigned parseHex(std::string str) {
 */
 color parseColor(boost::optional<pt::ptree&> col) {
 	if (col) {
-
 		// Parse different types of colors
 		std::string type = col->get("<xmlattr>.type", "mono");
 		if (type == "hex") {
@@ -114,13 +113,10 @@ fColor parseFColor(boost::optional<pt::ptree&> col) {
 colormap parseColormap(boost::optional<pt::ptree&> cmap) {
 	if (cmap) {
 		if (boost::optional<std::string> preset = cmap->get_optional<std::string>("<xmlattr>.preset")) {
-
 			// Parse preset
 			return fromPreset(*preset);
-
 		}
 		else {
-
 			// Parse types of colormaps
 			std::string type = cmap->get("<xmlattr>.type", "mono"); // It's a real thing, just drink it.
 			if (type == "gradient") {
@@ -137,7 +133,6 @@ colormap parseColormap(boost::optional<pt::ptree&> cmap) {
 			else {
 				return colormap();
 			}
-
 		}
 	}
 	else {

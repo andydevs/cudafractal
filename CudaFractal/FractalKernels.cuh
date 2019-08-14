@@ -6,6 +6,8 @@
 #include <cuComplex.h>
 
 /**
+ * Launch juliaset kernel
+ *
  * It assigns the corresponding pixel of the thread to a corresponding starting
  * complex number z. Then, it runs the juliaset algorithm on z using the given c.
  * Finally, it computes the color from the resulting iteration number and assigns
@@ -19,10 +21,11 @@
  * @param h    the height of the image
  * @param img  the image buffer
  */
-__global__
-void juliaset_kernel(cuFloatComplex c, cuFloatComplex s, cuFloatComplex t, colormap cmap, unsigned w, unsigned h, byte* img);
+void juliaset_launcher(cuFloatComplex c, cuFloatComplex s, cuFloatComplex t, colormap cmap, unsigned w, unsigned h, unsigned char* img);
 
 /**
+ * Launch mandelbrotset kernel
+ *
  * It assigns the corresponding pixel of the thread to a corresponding complex
  * constant number c and sets z to 0. Then, it runs the iteration algorithm on
  * z using the given c.Finally, it computes the color from the resulting iteration
@@ -35,5 +38,4 @@ void juliaset_kernel(cuFloatComplex c, cuFloatComplex s, cuFloatComplex t, color
  * @param h    the height of the image
  * @param img  the image buffer
  */
-__global__
-void mandelbrotset_kernel(cuFloatComplex s, cuFloatComplex t, colormap cmap, unsigned w, unsigned h, byte* img);
+void mandelbrotset_launcher(cuFloatComplex s, cuFloatComplex t, colormap cmap, unsigned w, unsigned h, unsigned char* img);
