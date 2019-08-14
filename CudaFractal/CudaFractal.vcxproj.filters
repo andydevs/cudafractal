@@ -7,6 +7,15 @@
     <CudaCompile Include="DeviceCode.cu">
       <Filter>Source Files</Filter>
     </CudaCompile>
+    <CudaCompile Include="XMLParse.cu">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
+    <CudaCompile Include="Presets.cu">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
+    <CudaCompile Include="Generate.cu">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coloring.cuh">

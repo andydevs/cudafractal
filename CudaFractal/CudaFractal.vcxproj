@@ -111,6 +111,9 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
   <ItemGroup>
     <CudaCompile Include="CudaFractal.cu" />
     <CudaCompile Include="DeviceCode.cu" />
+    <CudaCompile Include="Generate.cu" />
+    <CudaCompile Include="Presets.cu" />
+    <CudaCompile Include="XMLParse.cu" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="lodepng.cpp" />
