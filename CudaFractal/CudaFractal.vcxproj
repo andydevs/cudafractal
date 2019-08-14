@@ -68,6 +68,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"</Command>
     </PostBuildEvent>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
+      <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
     </CudaCompile>
     <CustomBuildStep>
       <Command>
@@ -100,6 +101,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
     </PostBuildEvent>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>
+      <GenerateRelocatableDeviceCode>true</GenerateRelocatableDeviceCode>
     </CudaCompile>
     <CustomBuildStep>
       <Command>
@@ -111,6 +113,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
   <ItemGroup>
     <CudaCompile Include="CudaFractal.cu" />
     <CudaCompile Include="DeviceCode.cu" />
+    <CudaCompile Include="FractalKernels.cu" />
     <CudaCompile Include="Generate.cu" />
     <CudaCompile Include="Presets.cu" />
     <CudaCompile Include="XMLParse.cu" />
@@ -121,6 +124,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
   <ItemGroup>
     <ClInclude Include="Coloring.cuh" />
     <ClInclude Include="DeviceCode.cuh" />
+    <ClInclude Include="FractalKernels.cuh" />
     <ClInclude Include="Generate.cuh" />
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="Presets.cuh" />

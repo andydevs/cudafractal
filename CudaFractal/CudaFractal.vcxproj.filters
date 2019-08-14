@@ -16,6 +16,9 @@
     <CudaCompile Include="Generate.cu">
       <Filter>Source Files</Filter>
     </CudaCompile>
+    <CudaCompile Include="FractalKernels.cu">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coloring.cuh">
@@ -37,6 +40,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Presets.cuh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="FractalKernels.cuh">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

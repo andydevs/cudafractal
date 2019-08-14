@@ -1,39 +1,33 @@
 #pragma once
 
-// Includes
-#include "Coloring.cuh"
-#include "Super.cuh"
+// Include
+#include <cuda_runtime.h>
 #include <cuComplex.h>
 
 /**
- * It assigns the corresponding pixel of the thread to a corresponding starting
- * complex number z. Then, it runs the juliaset algorithm on z using the given c.
- * Finally, it computes the color from the resulting iteration number and assigns
- * that color to the thread's corresponding pixel in the image.
+ * Returns complex from the given pixel in the image
  *
- * @param c    the complex constant c
- * @param s    the scale complex
- * @param t    the translation complex
- * @param cmap the colormap to use when mapping colors
- * @param w    the width of the image
- * @param h    the height of the image
- * @param img  the image buffer
- */
-__global__
-void juliaset(cuFloatComplex c, cuFloatComplex s, cuFloatComplex t, colormap cmap, unsigned w, unsigned h, unsigned char* img);
-
-/**
- * It assigns the corresponding pixel of the thread to a corresponding complex
- * constant number c and sets z to 0. Then, it runs the iteration algorithm on
- * z using the given c.Finally, it computes the color from the resulting iteration
- * number and assigns that color to the thread's corresponding pixel in the image.
- *
+ * @param x the x value of the pixel
+ * @param y the y value of the pixel
+ * @param w the width of the image
+ * @param h the height of the image
  * @param s the scale complex
  * @param t the translation complex
- * @param cmap the colormap to use when mapping colors
- * @param w    the width of the image
- * @param h    the height of the image
- * @param img  the image buffer
+ *
+ * @return complex from the given pixel in the image
  */
-__global__
-void mandelbrotset(cuFloatComplex s, cuFloatComplex t, colormap cmap, unsigned w, unsigned h, unsigned char* img);
+__device__ __host__
+cuFloatComplex fromPixel(unsigned x, unsigned y, unsigned w, unsigned h, cuFloatComplex s, cuFloatComplex t);
+
+/**
+ * The iterative process in the julia set. Computes z = z^2 + c
+ * iteratively, with z being initialized to w. Returns the number
+ * of iterations before abs(z) >= 2 (max 255).
+ *
+ * @param w complex value w
+ * @param c complex value c
+ *
+ * @return number of iterations before abs(z) >= 2 (max 255).
+ */
+__device__ __host__
+unsigned char iterations(cuFloatComplex w, cuFloatComplex c);

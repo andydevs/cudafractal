@@ -3,7 +3,6 @@
 
 // Includes
 #include "Generate.cuh"
-#include "DeviceCode.cuh"
 #include "Presets.cuh"
 #include "XMLParse.cuh"
 #include "lodepng.h"
