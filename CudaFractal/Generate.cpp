@@ -1,5 +1,6 @@
 // Includes
 #include "Generate.h"
+#include "ColorKernels.cuh"
 #include "FractalKernels.cuh"
 #include "lodepng.h"
 
@@ -13,38 +14,38 @@
 #include <ctime>
 
 /**
-* Generate fractal image
-*
-* @param mbrot    true if generating mandelbrot set
-* @param cons     complex constant
-* @param scale    scale transformation complex
-* @param trans    translate transformation complex
-* @param cmap     colormap to generate with
-* @param width    width of the image
-* @param height   height of the image
-* @param filename name of file to save to
-* @param mnemonic used to identify generator job
-*/
+ * Generate fractal image
+ *
+ * @param mbrot    true if generating mandelbrot set
+ * @param cons     complex constant
+ * @param scale    scale transformation complex
+ * @param trans    translate transformation complex
+ * @param cmap     colormap to generate with
+ * @param width    width of the image
+ * @param height   height of the image
+ * @param filename name of file to save to
+ * @param mnemonic used to identify generator job
+ */
 void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComplex trans, colormap cmap, unsigned width, unsigned height, std::string filename, std::string mnemonic) {
 	DEFINE_TIMES
 
-		// NOTE: 
-		//	Investigate why grid spaces or block spaces 
-		//	do not work in this case when made rectangular...
+	// Create a fractal space buffer
+	byte* space;
+	cudaMallocManaged(&space, width*height*sizeof(byte));
 
-		// Create a cuda-managed image buffer and save location at image
-		unsigned char* image;
-	unsigned length = width*height*IMAGE_NUM_CHANNELS;
-	cudaMallocManaged(&image, sizeof(unsigned char)*length);
+	// Call Fractal Kernel
+	DOING("Running fractal kernel for " + mnemonic);
+	if (mbrot) { mandelbrotset_launcher(scale, trans, width, height, space); }
+	else { juliaset_launcher(cons, scale, trans, width, height, space); }
+	DONE();
 
-	// Where the magic happens...
-	// Call CUDA kernel on the given grid space of blocks
-	// Each block being a block space of threads.
-	// Each thread computes a separate pixel in the Julia/mandelbrot set
-	DOING("Running kernel for " + mnemonic);
-	if (mbrot) { mandelbrotset_launcher(scale, trans, cmap, width, height, image); }
-	else { juliaset_launcher(cons, scale, trans, cmap, width, height, image); }
-	cudaDeviceSynchronize(); // Wait for kernel to finish
+	// Create an image buffer as cuda unified memory and save location at image
+	byte* image;
+	cudaMallocManaged(&image, width*height*IMAGE_NUM_CHANNELS*sizeof(byte));
+
+	// Call Colormap Kernel
+	DOING("Running colormap kernel for " + mnemonic);
+	legacy_colormap_launcher(cmap, width, height, space, image);
 	DONE();
 
 	// Save img buffer to png file
@@ -52,6 +53,7 @@ void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComp
 	lodepng_encode32_file(filename.c_str(), image, width, height);
 	DONE();
 
-	// Free image buffer and exit
+	// Free buffers
+	cudaFree(space);
 	cudaFree(image);
 };

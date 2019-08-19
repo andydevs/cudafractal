@@ -16,7 +16,7 @@
  *
  * @return complex from the given pixel in the image
  */
-__device__ __host__
+__device__
 cuFloatComplex fromPixel(unsigned x, unsigned y, unsigned w, unsigned h, cuFloatComplex s, cuFloatComplex t);
 
 /**
@@ -29,5 +29,5 @@ cuFloatComplex fromPixel(unsigned x, unsigned y, unsigned w, unsigned h, cuFloat
  *
  * @return number of iterations before abs(z) >= 2 (max 255).
  */
-__device__ __host__
+__device__
 unsigned char iterations(cuFloatComplex w, cuFloatComplex c);

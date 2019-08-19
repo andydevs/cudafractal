@@ -1,5 +1,9 @@
 // Includes
+#include "Super.h"
 #include "DeviceCode.cuh"
+
+// Maximum iterations
+#define MAX_ITER 255
 
 /**
  * Returns complex from the given pixel in the image
@@ -13,13 +17,14 @@
  *
  * @return complex from the given pixel in the image
  */
-__device__ __host__
+__device__
 cuFloatComplex fromPixel(unsigned x, unsigned y, unsigned w, unsigned h, cuFloatComplex s, cuFloatComplex t) {
+	// z complex value from image pixel
 	cuFloatComplex z = make_cuFloatComplex(
 		((float)2.0) * ((float)w/h) * x/w - ((float)w/h),
 		((float)2.0) * y/h - ((float)1.0));
 
-	// Return transform
+	// Transform complex value
 	return cuCmulf(s, cuCaddf(t, z));
 }
 
@@ -33,14 +38,14 @@ cuFloatComplex fromPixel(unsigned x, unsigned y, unsigned w, unsigned h, cuFloat
  *
  * @return number of iterations before abs(z) >= 2 (max 255).
  */
-__device__ __host__ 
+__device__ 
 unsigned char iterations(cuFloatComplex w, cuFloatComplex c) {
 	// Set initial z value
 	cuFloatComplex z = w;
 
 	// Algorithm
-	unsigned char iters;
-	for (iters = 0; iters < 255; iters++) {
+	byte iters;
+	for (iters = 0; iters < MAX_ITER; iters++) {
 		// Break if abs(z) >= 2
 		if (cuCabsf(z) >= 2) break;
 

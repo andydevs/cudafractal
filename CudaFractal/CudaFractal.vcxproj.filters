@@ -13,6 +13,9 @@
     <CudaCompile Include="Presets.cpp">
       <Filter>Source Files</Filter>
     </CudaCompile>
+    <CudaCompile Include="ColorKernels.cu">
+      <Filter>Source Files</Filter>
+    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coloring.cuh">
@@ -37,6 +40,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Super.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ColorKernels.cuh">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

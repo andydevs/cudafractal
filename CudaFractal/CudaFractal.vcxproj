@@ -111,6 +111,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
     </CustomBuildStep>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <CudaCompile Include="ColorKernels.cu" />
     <CudaCompile Include="DeviceCode.cu" />
     <CudaCompile Include="FractalKernels.cu" />
     <CudaCompile Include="Presets.cpp" />
@@ -123,6 +124,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coloring.cuh" />
+    <ClInclude Include="ColorKernels.cuh" />
     <ClInclude Include="DeviceCode.cuh" />
     <ClInclude Include="FractalKernels.cuh" />
     <ClInclude Include="Generate.h" />

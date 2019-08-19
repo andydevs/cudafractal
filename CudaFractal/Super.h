@@ -16,6 +16,19 @@
 // Define byte type
 typedef unsigned char byte;
 
+/**
+ * Returns scale complex which incorporates rotation and zooming
+ *
+ * @param rotate the rotation value (in degrees)
+ * @param zoom   the zoom value
+ *
+ * @return scale complex
+ */
+#define make_cuScaleComplex(rotate, zoom) \
+	make_cuFloatComplex( \
+		cos(rotate*F_PI / 180.0f) / zoom, \
+		sin(rotate*F_PI / 180.0f) / zoom)
+
 // Debug Macros
 #define DEFINE_TIMES \
 	clock_t big_start; \
