@@ -110,7 +110,7 @@ fColor parseFColor(boost::optional<pt::ptree&> col) {
 *
 * @return colormap from property tree
 */
-colormap parseColormap(boost::optional<pt::ptree&> cmap) {
+colormap_struct parseColormap(boost::optional<pt::ptree&> cmap) {
 	if (cmap) {
 		if (boost::optional<std::string> preset = cmap->get_optional<std::string>("<xmlattr>.preset")) {
 			// Parse preset
@@ -120,23 +120,23 @@ colormap parseColormap(boost::optional<pt::ptree&> cmap) {
 			// Parse types of colormaps
 			std::string type = cmap->get("<xmlattr>.type", "mono"); // It's a real thing, just drink it.
 			if (type == "gradient") {
-				return colormap::gradient(
+				return createLegacy(colormap::gradient(
 					parseColor(cmap->get_child_optional("from")),
-					parseColor(cmap->get_child_optional("to")));
+					parseColor(cmap->get_child_optional("to"))));
 			}
 			else if (type == "sinusoid") {
-				return colormap::sinusoidWithAlpha(
+				return createLegacy(colormap::sinusoidWithAlpha(
 					parseFColor(cmap->get_child_optional("frequency")),
 					parseFColor(cmap->get_child_optional("phase")),
-					cmap->get("<xmlattr>.alpha", 0xff));
+					cmap->get("<xmlattr>.alpha", 0xff)));
 			}
 			else {
-				return colormap();
+				return createLegacy(colormap());
 			}
 		}
 	}
 	else {
-		return colormap();
+		return createLegacy(colormap());
 	}
 }
 
@@ -161,7 +161,9 @@ void doFractalJob(pt::ptree job) {
 	unsigned width = job.get("image.<xmlattr>.width", 1920);
 	unsigned height = job.get("image.<xmlattr>.height", 1080);
 	std::string filename = job.get("image.<xmlattr>.filename", "fractal.png");
-	colormap cmap = parseColormap(job.get_child_optional("colormap"));
+	
+	// Create legacy colormap
+	colormap_struct cmap = parseColormap(job.get_child_optional("colormap"));
 
 	// Print job values in verbose
 	VERBOSE("---------------JOB INFO---------------");

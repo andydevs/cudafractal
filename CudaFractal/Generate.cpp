@@ -26,7 +26,7 @@
  * @param filename name of file to save to
  * @param mnemonic used to identify generator job
  */
-void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComplex trans, colormap cmap, unsigned width, unsigned height, std::string filename, std::string mnemonic) {
+void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComplex trans, colormap_struct cmap, unsigned width, unsigned height, std::string filename, std::string mnemonic) {
 	DEFINE_TIMES
 
 	// Create a fractal space buffer
@@ -45,7 +45,15 @@ void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComp
 
 	// Call Colormap Kernel
 	DOING("Running colormap kernel for " + mnemonic);
-	legacy_colormap_launcher(cmap, width, height, space, image);
+	switch (cmap.type)
+	{
+	case GRADIENT_TYPE:
+		gradient_colormap_launcher(cmap.from, cmap.to, width, height, space, image);
+	case LEGACY_TYPE:
+		legacy_colormap_launcher(cmap.legacy_map, width, height, space, image);
+	default:
+		break;
+	}
 	DONE();
 
 	// Save img buffer to png file

@@ -60,8 +60,7 @@ int main(int argc, const char* argv[]) {
 		make_cuFloatComplex(consr, consi),
 		make_cuScaleComplex(rotate, zoom),
 		make_cuFloatComplex(transx, transy),
-		fromPreset(cname),
-		width, height, filename,
+		fromPreset(cname), width, height, filename,
 		mnemonic);
 
 	return 0;

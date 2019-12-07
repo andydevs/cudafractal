@@ -16,6 +16,9 @@
 // Define byte type
 typedef unsigned char byte;
 
+// Define rgba struct
+struct rgba { byte r, g, b, a; };
+
 /**
  * Returns scale complex which incorporates rotation and zooming
  *

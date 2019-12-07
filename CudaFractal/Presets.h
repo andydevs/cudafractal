@@ -2,6 +2,7 @@
 
 // Includes
 #include "Coloring.cuh"
+#include "Colormap.h"
 #include <string>
 
 /**
@@ -11,7 +12,7 @@
  *
  * @return the preset colormap
  */
-colormap fromPreset(std::string name);
+colormap_struct fromPreset(std::string name);
 
 /**
  * Lists all presets available

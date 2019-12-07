@@ -45,6 +45,9 @@
     <ClInclude Include="ColorKernels.cuh">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Colormap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Header Files">
@@ -62,6 +65,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Colormap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

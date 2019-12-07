@@ -2,7 +2,7 @@
 
 // Includes
 #include "Super.h"
-#include "Coloring.cuh"
+#include "Colormap.h"
 
 // CUDA
 #include <cuda_runtime.h>
@@ -25,4 +25,4 @@
  * @param filename name of file to save to
  * @param mnemonic used to identify generator job
  */
-void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComplex trans, colormap cmap, unsigned width, unsigned height, std::string filename, std::string mnemonic);
+void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComplex trans, colormap_struct cmap, unsigned width, unsigned height, std::string filename, std::string mnemonic);

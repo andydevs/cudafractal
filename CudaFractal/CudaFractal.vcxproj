@@ -118,6 +118,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
     <CudaCompile Include="XMLParse.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Colormap.cpp" />
     <ClCompile Include="Generate.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="Main.cpp" />
@@ -125,6 +126,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
   <ItemGroup>
     <ClInclude Include="Coloring.cuh" />
     <ClInclude Include="ColorKernels.cuh" />
+    <ClInclude Include="Colormap.h" />
     <ClInclude Include="DeviceCode.cuh" />
     <ClInclude Include="FractalKernels.cuh" />
     <ClInclude Include="Generate.h" />

@@ -1,4 +1,5 @@
 #include "Coloring.cuh"
+#include "Colormap.h"
 #include "Super.h"
 #include "Presets.h"
  
@@ -7,7 +8,7 @@
 
 // Presets map
 static bool uninitialized = true;
-static std::map<std::string, colormap> presets;
+static std::map<std::string, colormap_struct> presets;
 
 /**
  * Initializes the presets map
@@ -17,42 +18,42 @@ void initPresets() {
 	if (uninitialized) {
 		// Populate presets map
 		VERBOSE("Initialize presets map");
-		presets["noir"] = colormap::gradient(
-			color::hex(0x000000),
-			color::hex(0xffffff));
-		presets["ink"] = colormap::gradient(
-			color::hex(0xffffff),
-			color::hex(0x000000));
-		presets["nvidia"] = colormap::gradient(
-			color::hex(0x000000),
-			color::hex(0xa3ff00));
-		presets["orchid"] = colormap::gradient(
-			color::hex(0xeeeeff),
-			color::hex(0xff0000));
-		presets["flower"] = colormap::sinusoid(
+		presets["noir"] = createGradient(
+			rgbaFromHex(0x000000), 
+			rgbaFromHex(0xffffff));
+		presets["ink"] = createGradient(
+			rgbaFromHex(0xffffff), 
+			rgbaFromHex(0x000000));
+		presets["nvidia"] = createGradient(
+			rgbaFromHex(0x000000), 
+			rgbaFromHex(0xa3ff00));
+		presets["orchid"] = createGradient(
+			rgbaFromHex(0xeeeeff), 
+			rgbaFromHex(0xff0000));
+		presets["flower"] = createLegacy(colormap::sinusoid(
 			fColor(0.7, 0.7, 0.7),
-			fColor(-2.0, -2.0, -1.0));
-		presets["psychedelic"] = colormap::sinusoid(
+			fColor(-2.0, -2.0, -1.0)));
+		presets["psychedelic"] = createLegacy(colormap::sinusoid(
 			fColor(5.0, 5.0, 5.0),
-			fColor(4.1, 4.5, 5.0));
-		presets["ice"] = colormap::sinusoid(
+			fColor(4.1, 4.5, 5.0)));
+		presets["ice"] = createLegacy(colormap::sinusoid(
 			fColor(2.0, 2.0, 0.1),
-			fColor(0.0, 0.0, 2.0));
-		presets["fruity"] = colormap::sinusoid(
+			fColor(0.0, 0.0, 2.0)));
+		presets["fruity"] = createLegacy(colormap::sinusoid(
 			fColor(5.0, 5.0, 5.0),
-			fColor(0.0, 4.5, 2.5));
-		presets["sarree"] = colormap::sinusoid(
+			fColor(0.0, 4.5, 2.5)));
+		presets["sarree"] = createLegacy(colormap::sinusoid(
 			fColor(1.4, 1.4, 1.4),
-			fColor(2.0, 3.0, 4.0));
-		presets["saffron"] = colormap::sinusoid(
+			fColor(2.0, 3.0, 4.0)));
+		presets["saffron"] = createLegacy(colormap::sinusoid(
 			fColor(1.00, 2.00, 2.00),
-			fColor(F_P1, F_P1, F_P1));
-		presets["lightgarden"] = colormap::sinusoid(
+			fColor(F_P1, F_P1, F_P1)));
+		presets["lightgarden"] = createLegacy(colormap::sinusoid(
 			fColor(1.00, 2.00, 9.00),
-			fColor(F_N1, F_N1, F_N1));
-		presets["acid"] = colormap::sinusoid(
+			fColor(F_N1, F_N1, F_N1)));
+		presets["acid"] = createLegacy(colormap::sinusoid(
 			fColor(8.00, 9.00, 0.00),
-			fColor(F_N1, F_N1, F_N1));
+			fColor(F_N1, F_N1, F_N1)));
 
 		// Toggle uninitialized
 		uninitialized = false;
@@ -66,7 +67,7 @@ void initPresets() {
  *
  * @return the preset colormap
  */
-colormap fromPreset(std::string name) {
+colormap_struct fromPreset(std::string name) {
 	initPresets();
 	return presets[name];
 };
@@ -77,7 +78,7 @@ colormap fromPreset(std::string name) {
 void listPresets() {
 	initPresets();
 	std::cout << "Presets Available:" << std::endl;
-	for each (std::pair<std::string, colormap> entry in presets) {
+	for each (std::pair<std::string, colormap_struct> entry in presets) {
 		std::cout << "    " << entry.first << std::endl;
 	}
 };
