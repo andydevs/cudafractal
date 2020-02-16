@@ -34,12 +34,7 @@ byte setPixel(byte* img, unsigned w, unsigned h, unsigned x, unsigned y, rgba co
  */
 __device__
 byte linearGradient(byte from, byte to, byte iter) {
-	if (from > to) {
-		return from - ((from - to) * iter / BYTE_MAX);
-	}
-	else {
-		return from + ((to - from) * iter / BYTE_MAX);
-	}
+	return (to * iter + from * (BYTE_MAX - iter)) / BYTE_MAX;
 }
 
 /**
