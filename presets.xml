@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<presets>
+  <preset name="nvidia" type="gradient">
+    <from type="hex" hex="0x000000"/>
+    <to type="hex" hex="0xa3ff00" />
+  </preset>
+</presets>

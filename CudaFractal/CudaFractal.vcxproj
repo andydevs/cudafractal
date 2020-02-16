@@ -122,6 +122,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
     <ClCompile Include="Generate.cpp" />
     <ClCompile Include="lodepng.cpp" />
     <ClCompile Include="Main.cpp" />
+    <ClCompile Include="XMLColormapParse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Coloring.cuh" />
@@ -133,6 +134,7 @@ copy "$(CudaToolkitBinDir)\cudart*.dll" "$(OutDir)"
     <ClInclude Include="lodepng.h" />
     <ClInclude Include="Presets.h" />
     <ClInclude Include="Super.h" />
+    <ClInclude Include="XMLColormapParse.h" />
     <ClInclude Include="XMLParse.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
