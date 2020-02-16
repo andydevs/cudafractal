@@ -49,8 +49,10 @@ void generate(bool mbrot, cuFloatComplex cons, cuFloatComplex scale, cuFloatComp
 	{
 	case GRADIENT_TYPE:
 		gradient_colormap_launcher(cmap.from, cmap.to, width, height, space, image);
+		break;
 	case LEGACY_TYPE:
 		legacy_colormap_launcher(cmap.legacy_map, width, height, space, image);
+		break;
 	default:
 		break;
 	}

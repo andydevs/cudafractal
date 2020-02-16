@@ -6,7 +6,10 @@
     <translate transx="0.0" transy="0.0" />
     <image width="1920" height="1080" 
            filename="flower.png" />
-    <colormap preset="flower"/>
+    <colormap type="gradient">
+      <from type="hex" hex="0x000000"/>
+      <to type="hex" hex="0x00aaff"/>
+    </colormap>
   </fractal>
 
   <fractal mnemonic="colorful-fractal">
@@ -15,7 +18,7 @@
     <translate transx="0.0" transy="0.0" />
     <image width="1920" height="1080"
            filename="colorful.png" />
-    <colormap preset="saffron"/>
+    <colormap preset="orchid"/>
   </fractal>
 
   <fractal mnemonic="complex-fractal">
@@ -24,7 +27,7 @@
     <translate transx="0.0" transy="0.0" />
     <image width="1920" height="1080"
            filename="complex.png" />
-    <colormap preset="ink"/>
+    <colormap preset="noir"/>
   </fractal>
 
   <fractal mnemonic="mandelbrot-fractal" mandelbrot="true">
