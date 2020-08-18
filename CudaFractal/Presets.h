@@ -6,6 +6,13 @@
 #include <string>
 
 /**
+ * Return preset file path
+ *
+ * @return preset file path
+ */
+std::string getPresetFilePath();
+
+/**
  * Initializes the presets map
  */
 void initPresets();

@@ -11,6 +11,19 @@ static bool uninitialized = true;
 static std::map<std::string, colormap_struct> presets;
 
 /**
+ * Return preset file path
+ *
+ * @return preset file path
+ */
+std::string getPresetFilePath() {
+#ifdef _DEBUG
+	return ".\\presets.xml";
+#else
+	return getenv("CUDAFractalFiles") + std::string("\\presets.xml");
+#endif
+}
+
+/**
  * Initializes the presets map
  */
 void initPresets() {
@@ -75,6 +88,7 @@ colormap_struct fromPreset(std::string name) {
  * Lists all presets available
  */
 void listPresets() {
+	std::cout << "Reading presets from: " << getPresetFilePath() << std::endl;
 	std::cout << "Presets Available:" << std::endl;
 	for each (std::pair<std::string, colormap_struct> entry in presets) {
 		std::cout << "    " << entry.first;
