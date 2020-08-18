@@ -2,6 +2,8 @@
 #include "Coloring.cuh"
 
 /**
+ * DEPRECATED (gonna use static colormap array)
+ * 
  * Launch legacy colormap kernel
  *
  * Use legacy colormap code to map number from iteration space to byte color in image
@@ -15,6 +17,8 @@
 void legacy_colormap_launcher(colormap cmap, unsigned w, unsigned h, byte *space, byte *image);
 
 /**
+ * DEPRECATED (gonna use static colormap array)
+ *
  * Launch gradient colormap kernel
  *
  * Map number from iteration space to byte color in image from linear gradient between two colors

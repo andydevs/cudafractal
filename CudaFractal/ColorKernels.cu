@@ -1,6 +1,10 @@
 #include "Coloring.cuh"
 #include "ColorKernels.cuh"
 
+/**
+ * DEPRECATED (gonna use static colormap array)
+ */
+
 // Cuda stuff
 #include <device_launch_parameters.h>
 #include <cuda_runtime.h>
