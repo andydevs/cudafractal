@@ -1,7 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <presets>
+  <preset name="noir" type="gradient">
+    <from type="hex" hex="0x000000"/>
+    <to type="hex" hex="0xffffff"/>
+  </preset>
+  <preset name="ink" type="gradient">
+    <from type="hex" hex="0xffffff"/>
+    <to type="hex" hex="0x000000"/>
+  </preset>
   <preset name="nvidia" type="gradient">
     <from type="hex" hex="0x000000"/>
-    <to type="hex" hex="0xa3ff00" />
+    <to type="hex" hex="0xa3ff00"/>
+  </preset>
+  <preset name="orchid" type="gradient">
+    <from type="hex" hex="0xeeeeff"/>
+    <to type="hex" hex="0xff0000"/>
   </preset>
 </presets>

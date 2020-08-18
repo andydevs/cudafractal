@@ -2,6 +2,7 @@
 #include "Colormap.h"
 #include "Super.h"
 #include "Presets.h"
+#include "XMLParse.h"
  
 #include <iostream>
 #include <map>
@@ -24,9 +25,18 @@ std::string getPresetFilePath() {
 }
 
 /**
- * Initializes the presets map
+ * Initializes the presets map from preset file
  */
 void initPresets() {
+	std::string presetFile = getPresetFilePath();
+	parsePresetXmlFile(presetFile, presets);
+}
+
+/**
+ * DEPRECATED
+ * Directly initializes the presets map
+ */
+void initPresets_legacy() {
 	// Initialize if uninitialized
 	if (uninitialized) {
 		// Populate presets map
@@ -88,7 +98,6 @@ colormap_struct fromPreset(std::string name) {
  * Lists all presets available
  */
 void listPresets() {
-	std::cout << "Reading presets from: " << getPresetFilePath() << std::endl;
 	std::cout << "Presets Available:" << std::endl;
 	for each (std::pair<std::string, colormap_struct> entry in presets) {
 		std::cout << "    " << entry.first;

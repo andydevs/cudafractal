@@ -123,3 +123,64 @@ void parseXmlFile(std::string filename) {
 		VERBOSE("File doesn't exist!");
 	}
 }
+
+/**
+ * Read preset xml file into colormap preset map
+ *
+ * @param filename name of preset xml file
+ * @param presets  presets map to set to
+ */
+void parsePresetXmlFile(std::string filename, std::map<std::string, colormap_struct>& presets) {
+	DEFINE_TIMES
+
+	pt::ptree preset;
+	std::string name;
+
+	VERBOSE("Parsing " + filename);
+	std::ifstream file(filename);
+	if (file.is_open())
+	{
+		VERBOSE("File is found!");
+		try
+		{
+			// Parse jobs from file
+			pt::ptree presetxml;
+			read_xml(file, presetxml, pt::xml_parser::no_comments);
+			VERBOSE("Valid XML");
+
+			// Get joblist
+			pt::ptree presetdefs = presetxml.get_child("presets");
+			VERBOSE("Number of presets: " + std::to_string(presetdefs.size()));
+
+			// Do all jobs in fractals element
+			BIG_DOING("Parsing presets...");
+			BOOST_FOREACH(pt::ptree::value_type presetent, presetdefs) {
+				preset = presetent.second;
+				name = preset.get_child("<xmlattr>.name").get_value<std::string>();
+				VERBOSE("Parsing: " + name);
+				presets[name] = parseColormap(preset);
+			}
+			BIG_DONE();
+		}
+		catch (const pt::xml_parser_error& e)
+		{
+			std::cerr << "ERROR Parsing xml file!: " << e.what() << std::endl;
+			file.close();
+			return;
+		}
+		catch (const std::exception& e)
+		{
+			// Close file before throwing
+			std::cerr << "ERROR: " << e.what() << std::endl;
+			file.close();
+			return;
+		}
+
+		// Close file
+		file.close();
+	}
+	else
+	{
+		VERBOSE("File doesn't exist!");
+	}
+}

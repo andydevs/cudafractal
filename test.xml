@@ -36,6 +36,6 @@
     <translate transx="0.0" transy="0.0" />
     <image width="1920" height="1080"
            filename="mandelbrot.png" />
-    <colormap preset="ink"/>
+    <colormap preset="nvidia"/>
   </fractal>
 </fractals>
