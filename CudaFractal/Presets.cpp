@@ -68,7 +68,6 @@ void initPresets() {
  * @return the preset colormap
  */
 colormap_struct fromPreset(std::string name) {
-	initPresets();
 	return presets[name];
 };
 
@@ -76,9 +75,19 @@ colormap_struct fromPreset(std::string name) {
  * Lists all presets available
  */
 void listPresets() {
-	initPresets();
 	std::cout << "Presets Available:" << std::endl;
 	for each (std::pair<std::string, colormap_struct> entry in presets) {
-		std::cout << "    " << entry.first << std::endl;
+		std::cout << "    " << entry.first;
+		switch (entry.second.type)
+		{
+		case GRADIENT_TYPE:
+			std::cout << " -- GRADIENT" << std::endl;
+			break;
+		case LEGACY_TYPE:
+			std::cout << " -- LEGACY" << std::endl;
+			break; // YOU WILL NOT FOOL ME TWICE
+		default:
+			break;
+		}
 	}
 };

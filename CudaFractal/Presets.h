@@ -6,6 +6,11 @@
 #include <string>
 
 /**
+ * Initializes the presets map
+ */
+void initPresets();
+
+/**
  * Returns the preset colormap of the given name
  *
  * @param name the name of the colormap

@@ -30,6 +30,9 @@ int main(int argc, const char* argv[]) {
 	unsigned width, height;
 	std::string xml, cname, filename, mnemonic;
 
+	// Initialize presets table
+	initPresets();
+
 	// Get user input
 	po::options_description options("> CUDAFractal [options]");
 	options.add_options()

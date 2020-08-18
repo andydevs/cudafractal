@@ -16,17 +16,22 @@ EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
+		DebugPresets|x64 = DebugPresets|x64
 		DefaultBuild|x64 = DefaultBuild|x64
 		Release|x64 = Release|x64
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.Debug|x64.ActiveCfg = Debug|x64
 		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.Debug|x64.Build.0 = Debug|x64
+		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.DebugPresets|x64.ActiveCfg = DebugPresets|x64
+		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.DebugPresets|x64.Build.0 = DebugPresets|x64
 		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.DefaultBuild|x64.ActiveCfg = Debug|x64
 		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.DefaultBuild|x64.Build.0 = Debug|x64
 		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.Release|x64.ActiveCfg = Release|x64
 		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.Release|x64.Build.0 = Release|x64
 		{11D5BBCA-1608-4DC5-816C-E725990A12E4}.Debug|x64.ActiveCfg = Debug
+		{11D5BBCA-1608-4DC5-816C-E725990A12E4}.DebugPresets|x64.ActiveCfg = Debug
+		{11D5BBCA-1608-4DC5-816C-E725990A12E4}.DebugPresets|x64.Build.0 = Debug
 		{11D5BBCA-1608-4DC5-816C-E725990A12E4}.DefaultBuild|x64.ActiveCfg = Debug
 		{11D5BBCA-1608-4DC5-816C-E725990A12E4}.Release|x64.ActiveCfg = Release
 		{11D5BBCA-1608-4DC5-816C-E725990A12E4}.Release|x64.Build.0 = Release
