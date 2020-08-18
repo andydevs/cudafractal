@@ -18,6 +18,7 @@
     <ProjectGuid>{8724C61E-BAEB-4779-9127-0939D7FACDFC}</ProjectGuid>
     <RootNamespace>CudaFractal</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <ProjectName>CUDAFractal</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
