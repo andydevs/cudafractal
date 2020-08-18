@@ -15,6 +15,12 @@ namespace pt = boost::property_tree;
  */
 unsigned parseHex(std::string str);
 
+/**
+ * Parse color from property tree
+ *
+ * @param col         (optional) the property tree
+ * @param defaultHexa default hex color to return if color is not found
+ */
 rgba parseColor(boost::optional<pt::ptree&> col, std::string defaultHexa);
 
 /**
