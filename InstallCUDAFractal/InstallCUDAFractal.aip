@@ -25,16 +25,13 @@
   <COMPONENT cid="caphyon.advinst.msicomp.MsiDirsComponent">
     <ROW Directory="APPDIR" Directory_Parent="TARGETDIR" DefaultDir="APPDIR:." IsPseudoRoot="1"/>
     <ROW Directory="AppDataFolder" Directory_Parent="TARGETDIR" DefaultDir="APPDAT~1|AppDataFolder" IsPseudoRoot="1"/>
-    <ROW Directory="CUDAFractal_2_Dir" Directory_Parent="APPDIR" DefaultDir="CUDAFR~1|CUDAFractal"/>
     <ROW Directory="CUDAFractal_Dir" Directory_Parent="AppDataFolder" DefaultDir="CUDAFR~1|CUDAFractal"/>
-    <ROW Directory="SHORTCUTDIR" Directory_Parent="TARGETDIR" DefaultDir="SHORTC~1|SHORTCUTDIR" IsPseudoRoot="1"/>
     <ROW Directory="TARGETDIR" DefaultDir="SourceDir"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
     <ROW Component="APPDIR" ComponentId="{3CF9C17B-8A20-43DB-B1B0-65B99D560AAA}" Directory_="APPDIR" Attributes="0"/>
-    <ROW Component="CUDAFractal_PrimaryOutput" ComponentId="{A84BA857-2918-4182-A241-F943F3147131}" Directory_="CUDAFractal_2_Dir" Attributes="256" KeyPath="CudaFractal.exe"/>
+    <ROW Component="CUDAFractal_PrimaryOutput" ComponentId="{A84BA857-2918-4182-A241-F943F3147131}" Directory_="APPDIR" Attributes="256" KeyPath="CudaFractal.exe"/>
     <ROW Component="ProductInformation" ComponentId="{AFED9025-C947-4226-84D7-0B30A12669BA}" Directory_="APPDIR" Attributes="4" KeyPath="Version"/>
-    <ROW Component="SHORTCUTDIR" ComponentId="{F51125C7-9FBD-4BCA-8CA6-6BE9183F53C1}" Directory_="SHORTCUTDIR" Attributes="0"/>
     <ROW Component="presets.xml_1" ComponentId="{AA88AE69-7EDB-439A-8C8C-5CCD32B2BFED}" Directory_="CUDAFractal_Dir" Attributes="0" KeyPath="presets.xml" Type="0"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatsComponent">
@@ -43,7 +40,7 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFilesComponent">
     <ROW File="presets.xml" Component_="presets.xml_1" FileName="presets.xml" Attributes="0" SourcePath="..\presets.xml" SelfReg="false"/>
-    <ROW File="CudaFractal.exe" Component_="CUDAFractal_PrimaryOutput" FileName="CUDAFR~2.EXE|[|AI_PROPPATH_FILENAME_PERBUILD_CudaFractal.exe]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_CudaFractal.exe&gt;" SelfReg="false" DigSign="true"/>
+    <ROW File="CudaFractal.exe" Component_="CUDAFractal_PrimaryOutput" FileName="CUDAFR~1.EXE|[|AI_PROPPATH_FILENAME_PERBUILD_CudaFractal.exe]" Attributes="0" SourcePath="&lt;AI_APPPATH_PERBUILD_CudaFractal.exe&gt;" SelfReg="false" DigSign="true"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.AppPathsComponent">
     <ROW Name="AI_APPPATH_PERBUILD_CudaFractal.exe" Path="[|AI_PROPPATH_DIR_PERBUILD_CudaFractal.exe]\[|AI_PROPPATH_FILENAME_PERBUILD_CudaFractal.exe]" Type="2" Content="0"/>
@@ -101,7 +98,6 @@
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCreateFolderComponent">
     <ROW Directory_="APPDIR" Component_="APPDIR" ManualDelete="true"/>
-    <ROW Directory_="SHORTCUTDIR" Component_="SHORTCUTDIR" ManualDelete="false"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCustActComponent">
     <ROW Action="AI_DOWNGRADE" Type="19" Target="4010"/>
@@ -117,12 +113,14 @@
     <ROW Action="SET_SHORTCUTDIR" Type="307" Source="SHORTCUTDIR" Target="[ProgramMenuFolder][ProductName]"/>
     <ROW Action="SET_TARGETDIR_TO_APPDIR" Type="51" Source="TARGETDIR" Target="[APPDIR]"/>
   </COMPONENT>
+  <COMPONENT cid="caphyon.advinst.msicomp.MsiEnvComponent">
+    <ROW Environment="PATH" Name="=-*PATH" Value="[~];[APPDIR]" Component_="APPDIR"/>
+  </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiFeatCompsComponent">
     <ROW Feature_="MainFeature" Component_="APPDIR"/>
     <ROW Feature_="MainFeature" Component_="ProductInformation"/>
     <ROW Feature_="MainFeature" Component_="presets.xml_1"/>
     <ROW Feature_="MainFeature" Component_="CUDAFractal_PrimaryOutput"/>
-    <ROW Feature_="MainFeature" Component_="SHORTCUTDIR"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiInstExSeqComponent">
     <ROW Action="AI_DOWNGRADE" Condition="AI_NEWERPRODUCTFOUND AND (UILevel &lt;&gt; 5)" Sequence="210"/>
@@ -148,9 +146,6 @@
     <ROW Registry="Path" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Path" Value="[APPDIR]" Component_="ProductInformation"/>
     <ROW Registry="Version" Root="-1" Key="Software\[Manufacturer]\[ProductName]" Name="Version" Value="[ProductVersion]" Component_="ProductInformation"/>
   </COMPONENT>
-  <COMPONENT cid="caphyon.advinst.msicomp.MsiShortsComponent">
-    <ROW Shortcut="CudaFractal" Directory_="SHORTCUTDIR" Name="CUDAFR~1|CudaFractal" Component_="CUDAFractal_PrimaryOutput" Target="[#CudaFractal.exe]" Hotkey="0" IconIndex="0" ShowCmd="1"/>
-  </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiThemeComponent">
     <ATTRIBUTE name="UsedTheme" value="classic"/>
   </COMPONENT>
@@ -159,6 +154,6 @@
     <ROW UpgradeCode="[|UpgradeCode]" VersionMin="[|ProductVersion]" Attributes="2" ActionProperty="AI_NEWERPRODUCTFOUND"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.VsProjectComponent">
-    <ROW ProjectId="{8724c61e-baeb-4779-9127-0939d7facdfc}" ProjectName="CUDAFractal" OutputGroup="PrimaryOutput" OutputFile="CudaFractal.exe" OutputFileShortcut="CudaFractal"/>
+    <ROW ProjectId="{8724c61e-baeb-4779-9127-0939d7facdfc}" ProjectName="CUDAFractal" OutputGroup="PrimaryOutput" OutputFile="CudaFractal.exe"/>
   </COMPONENT>
 </DOCUMENT>
