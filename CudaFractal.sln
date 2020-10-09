@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26430.6
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CudaFractal", "CudaFractal\CudaFractal.vcxproj", "{8724C61E-BAEB-4779-9127-0939D7FACDFC}"
 EndProject
@@ -11,8 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 		test.xml = test.xml
 	EndProjectSection
-EndProject
-Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "InstallCUDAFractal", "InstallCUDAFractal\InstallCUDAFractal.aiproj", "{FB0560ED-0D96-401D-8011-1C88F19024AD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,18 +31,11 @@ Global
 		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.DefaultBuild|x64.Build.0 = Debug|x64
 		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.Release|x64.ActiveCfg = Release|x64
 		{8724C61E-BAEB-4779-9127-0939D7FACDFC}.Release|x64.Build.0 = Release|x64
-		{FB0560ED-0D96-401D-8011-1C88F19024AD}.All|x64.ActiveCfg = DefaultBuild
-		{FB0560ED-0D96-401D-8011-1C88F19024AD}.All|x64.Build.0 = DefaultBuild
-		{FB0560ED-0D96-401D-8011-1C88F19024AD}.Debug|x64.ActiveCfg = DefaultBuild
-		{FB0560ED-0D96-401D-8011-1C88F19024AD}.Debug|x64.Build.0 = DefaultBuild
-		{FB0560ED-0D96-401D-8011-1C88F19024AD}.DebugPresets|x64.ActiveCfg = DefaultBuild
-		{FB0560ED-0D96-401D-8011-1C88F19024AD}.DebugPresets|x64.Build.0 = DefaultBuild
-		{FB0560ED-0D96-401D-8011-1C88F19024AD}.DefaultBuild|x64.ActiveCfg = DefaultBuild
-		{FB0560ED-0D96-401D-8011-1C88F19024AD}.DefaultBuild|x64.Build.0 = DefaultBuild
-		{FB0560ED-0D96-401D-8011-1C88F19024AD}.Release|x64.ActiveCfg = DefaultBuild
-		{FB0560ED-0D96-401D-8011-1C88F19024AD}.Release|x64.Build.0 = DefaultBuild
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {8B4D2E2B-8CB8-4C9F-B539-1654621A2BAC}
 	EndGlobalSection
 EndGlobal
