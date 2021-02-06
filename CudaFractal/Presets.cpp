@@ -18,7 +18,7 @@ static std::map<std::string, colormap_struct> presets;
  */
 std::string getPresetFilePath() {
 #ifdef _DEBUG
-	return ".\\presets.xml";
+	return "..\\presets.xml";
 #else
 	return getenv("CUDAFractalFiles") + std::string("\\presets.xml");
 #endif
