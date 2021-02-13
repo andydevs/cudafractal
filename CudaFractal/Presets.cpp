@@ -20,7 +20,7 @@ std::string getPresetFilePath() {
 #ifdef _DEBUG
 	return "..\\presets.xml";
 #else
-	return getenv("CUDAFractalFiles") + std::string("\\presets.xml");
+	return getenv("CUDAFRACTAL_FILES") + std::string("\\presets.xml");
 #endif
 }
 
