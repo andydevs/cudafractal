@@ -1,33 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <CudaCompile Include="DeviceCode.cu">
-      <Filter>Source Files</Filter>
-    </CudaCompile>
-    <CudaCompile Include="FractalKernels.cu">
-      <Filter>Source Files</Filter>
-    </CudaCompile>
     <CudaCompile Include="XMLParse.cpp">
       <Filter>Source Files</Filter>
     </CudaCompile>
     <CudaCompile Include="Presets.cpp">
       <Filter>Source Files</Filter>
     </CudaCompile>
-    <CudaCompile Include="ColorKernels.cu">
-      <Filter>Source Files</Filter>
-    </CudaCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Coloring.cuh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DeviceCode.cuh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="lodepng.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="FractalKernels.cuh">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Generate.h">
@@ -40,9 +22,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Super.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ColorKernels.cuh">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Colormap.h">

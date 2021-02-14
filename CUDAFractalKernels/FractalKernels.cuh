@@ -19,7 +19,7 @@
  * @param h   the height of the image
  * @param spc the image buffer
  */
-void juliaset_launcher(cuFloatComplex c, cuFloatComplex s, cuFloatComplex t, unsigned w, unsigned h, byte *spc);
+extern "C" API void juliaset_launcher(cuFloatComplex c, cuFloatComplex s, cuFloatComplex t, unsigned w, unsigned h, byte *spc);
 
 /**
  * Launch mandelbrotset kernel
@@ -34,4 +34,4 @@ void juliaset_launcher(cuFloatComplex c, cuFloatComplex s, cuFloatComplex t, uns
  * @param h   the height of the image
  * @param spc the image buffer
  */
-void mandelbrotset_launcher(cuFloatComplex s, cuFloatComplex t, unsigned w, unsigned h, byte *spc);
+extern "C" API void mandelbrotset_launcher(cuFloatComplex s, cuFloatComplex t, unsigned w, unsigned h, byte *spc);

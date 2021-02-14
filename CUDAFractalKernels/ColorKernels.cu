@@ -20,7 +20,7 @@
  * @param color rgba color to set pixel to
  */
 __device__
-byte setPixel(byte* img, unsigned w, unsigned h, unsigned x, unsigned y, rgba color) {
+void setPixel(byte* img, unsigned w, unsigned h, unsigned x, unsigned y, rgba color) {
 	img[ (y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_RED_CHANNEL   ] = color.r; // Red
 	img[ (y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_GREEN_CHANNEL ] = color.g; // Green
 	img[ (y*w + x)*IMAGE_NUM_CHANNELS + IMAGE_BLUE_CHANNEL  ] = color.b; // Blue

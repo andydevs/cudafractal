@@ -14,7 +14,7 @@
  * @param space fractal iteration space buffer
  * @param image final image buffer
  */
-void legacy_colormap_launcher(colormap cmap, unsigned w, unsigned h, byte *space, byte *image);
+extern "C" API void legacy_colormap_launcher(colormap cmap, unsigned w, unsigned h, byte *space, byte *image);
 
 /**
  * DEPRECATED (gonna use static colormap array)
@@ -30,4 +30,4 @@ void legacy_colormap_launcher(colormap cmap, unsigned w, unsigned h, byte *space
  * @param space fractal iteration space buffer
  * @param image final image buffer
  */
-void gradient_colormap_launcher(rgba from, rgba to, unsigned w, unsigned h, byte *space, byte *image);
+extern "C" API void gradient_colormap_launcher(rgba from, rgba to, unsigned w, unsigned h, byte *space, byte *image);

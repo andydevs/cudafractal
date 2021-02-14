@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 16.0.30413.136
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CUDAFractal", "CudaFractal\CudaFractal.vcxproj", "{8724C61E-BAEB-4779-9127-0939D7FACDFC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{0323D300-5E16-40BD-8EA1-5DB04917D5FF} = {0323D300-5E16-40BD-8EA1-5DB04917D5FF}
+	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F60F2662-ACF5-4D5B-9DEA-099A528A12DC}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,6 +16,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{840C416C-B8F3-42BC-B0DD-F6BB14C9F8CB}") = "Install CUDAFractal", "Install CUDAFractal\Install CUDAFractal.aiproj", "{A79DC8D2-B904-4048-90B8-618A348B1AD9}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "CUDAFractalKernels", "CUDAFractalKernels\CUDAFractalKernels.vcxproj", "{0323D300-5E16-40BD-8EA1-5DB04917D5FF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +43,16 @@ Global
 		{A79DC8D2-B904-4048-90B8-618A348B1AD9}.DebugPresets|x64.ActiveCfg = DefaultBuild
 		{A79DC8D2-B904-4048-90B8-618A348B1AD9}.DefaultBuild|x64.ActiveCfg = DefaultBuild
 		{A79DC8D2-B904-4048-90B8-618A348B1AD9}.Release|x64.ActiveCfg = DefaultBuild
+		{0323D300-5E16-40BD-8EA1-5DB04917D5FF}.All|x64.ActiveCfg = Debug|x64
+		{0323D300-5E16-40BD-8EA1-5DB04917D5FF}.All|x64.Build.0 = Debug|x64
+		{0323D300-5E16-40BD-8EA1-5DB04917D5FF}.Debug|x64.ActiveCfg = Debug|x64
+		{0323D300-5E16-40BD-8EA1-5DB04917D5FF}.Debug|x64.Build.0 = Debug|x64
+		{0323D300-5E16-40BD-8EA1-5DB04917D5FF}.DebugPresets|x64.ActiveCfg = Debug|x64
+		{0323D300-5E16-40BD-8EA1-5DB04917D5FF}.DebugPresets|x64.Build.0 = Debug|x64
+		{0323D300-5E16-40BD-8EA1-5DB04917D5FF}.DefaultBuild|x64.ActiveCfg = Debug|x64
+		{0323D300-5E16-40BD-8EA1-5DB04917D5FF}.DefaultBuild|x64.Build.0 = Debug|x64
+		{0323D300-5E16-40BD-8EA1-5DB04917D5FF}.Release|x64.ActiveCfg = Release|x64
+		{0323D300-5E16-40BD-8EA1-5DB04917D5FF}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
